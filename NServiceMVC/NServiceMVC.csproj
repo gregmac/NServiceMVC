@@ -31,9 +31,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.0.7\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -43,11 +47,31 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionInvoker.cs" />
+    <Compile Include="Formats\Charset.cs" />
+    <Compile Include="Formats\CharsetList.cs" />
+    <Compile Include="Formats\FormatManager.cs" />
+    <Compile Include="Formats\IRequestFormatHandler.cs" />
+    <Compile Include="Formats\IResponseFormatHandler.cs" />
+    <Compile Include="Formats\Json\JsonNetActionResult.cs" />
+    <Compile Include="Formats\Json\JsonNetFormatHandler.cs" />
+    <Compile Include="Formats\Xhtml\XhtmlFormatHandler.cs" />
+    <Compile Include="Formats\Xml\Utilities\Xml.cs" />
+    <Compile Include="Formats\Xml\Utilities\XmlPreloadedResolver.cs" />
+    <Compile Include="Formats\Xml\Utilities\Xslt.cs" />
+    <Compile Include="Formats\Xml\VirtualPathProviderXsltEngine.cs" />
+    <Compile Include="Formats\Xml\XmlActionResult.cs" />
+    <Compile Include="Formats\Xml\XmlFormatHandler.cs" />
+    <Compile Include="Formats\Xml\XsltEngineResult.cs" />
+    <Compile Include="Formats\Xml\XsltSerializer.cs" />
     <Compile Include="HttpRequestInfo.cs" />
     <Compile Include="MultipleRepresentationsBinder.cs" />
     <Compile Include="NServiceMVC.cs" />
     <Compile Include="ServiceController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Formats\Xml\Utilities\xhtml11-flat.dtd" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

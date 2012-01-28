@@ -17,7 +17,10 @@ namespace NServiceMVC
             ActionInvoker = new ActionInvoker(this);
         }
 
-        protected HttpRequestInfo RequestInfo { get; set; }
+        /// <summary>
+        /// Information about the request. 
+        /// </summary>
+        public HttpRequestInfo RequestInfo { get; set; }
 
         protected override void  OnActionExecuting(System.Web.Mvc.ActionExecutingContext filterContext)
         {

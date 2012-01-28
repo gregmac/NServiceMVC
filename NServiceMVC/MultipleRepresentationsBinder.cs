@@ -25,6 +25,7 @@ using System.Net;
 using System.Web.Mvc;
 using System.Web;
 using System;
+using NServiceMVC.Formats;
 
 namespace NServiceMVC
 {
@@ -44,21 +45,21 @@ namespace NServiceMVC
             if (!controllerContext.RouteData.Values.ContainsKey(bindingContext.ModelName) && RequestHasBody(controllerContext.HttpContext.Request))
             {
                 object model = null;
-                //TryBindModel(controllerContext, bindingContext, out model);
+                TryBindModel(controllerContext, bindingContext, out model);
                 return model;
             }
 
             return _inner.BindModel(controllerContext, bindingContext);
         }
 
-        //private void TryBindModel(ControllerContext controllerContext, ModelBindingContext bindingContext, out object model)
-        //{
-        //    if (!FormatManager.Current.TryDeserializeRequestRepresentation(controllerContext, bindingContext, out model))
-        //    {
-        //        // If the data was not handled by any of the format handlers, try the default binder
-        //        model = _inner.BindModel(controllerContext, bindingContext);
-        //    }
-        //}
+        private void TryBindModel(ControllerContext controllerContext, ModelBindingContext bindingContext, out object model)
+        {
+            if (!FormatManager.Current.TryDeserializeRequestRepresentation(controllerContext, bindingContext, out model))
+            {
+                // If the data was not handled by any of the format handlers, try the default binder
+                model = _inner.BindModel(controllerContext, bindingContext);
+            }
+        }
 
         private static bool RequestHasBody(HttpRequestBase request)
         {

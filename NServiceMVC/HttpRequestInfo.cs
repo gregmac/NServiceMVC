@@ -25,6 +25,7 @@ using System;
 using System.Net;
 using System.Net.Mime;
 using System.Web;
+using NServiceMVC.Formats;
 
 namespace NServiceMVC
 {
@@ -212,10 +213,10 @@ namespace NServiceMVC
                 {
                     // This may be a friendly name (for example, "xml" instead of "text/xml").
                     // if so, try mapping to a content type
-                    //if (FormatManager.Current.TryToMapFormatFriendlyName(contentFormatFromQueryString, out contentType))
-                    //{
-                    //    return true;
-                    //}
+                    if (FormatManager.Current.TryToMapFormatFriendlyName(contentFormatFromQueryString, out contentType))
+                    {
+                        return true;
+                    }
                 }
             }
 
