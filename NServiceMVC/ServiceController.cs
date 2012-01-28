@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web;
+using System.Net;
+using System.Net.Mime;
+
 
 namespace NServiceMVC
 {
@@ -11,12 +15,13 @@ namespace NServiceMVC
             : base()
         {
             ActionInvoker = new ActionInvoker(this);
-            
         }
 
+        protected HttpRequestInfo RequestInfo { get; set; }
+
         protected override void  OnActionExecuting(System.Web.Mvc.ActionExecutingContext filterContext)
-        {   
- 	
+        {
+            RequestInfo = new HttpRequestInfo(filterContext.HttpContext.Request);
             base.OnActionExecuting(filterContext);
         }
 
@@ -24,6 +29,7 @@ namespace NServiceMVC
         {
             base.OnActionExecuted(filterContext);
         }
+
 
     }
 }
