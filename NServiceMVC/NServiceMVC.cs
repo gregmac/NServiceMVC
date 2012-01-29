@@ -13,7 +13,7 @@ namespace NServiceMVC
         /// </summary>
         public static void Initalize()
         {
-            ModelBinders.Binders.DefaultBinder = (new MultipleRepresentationsBinder());
+            ModelBinders.Binders.DefaultBinder = (new WebStack.MultipleRepresentationsBinder());
         }
     }
 }

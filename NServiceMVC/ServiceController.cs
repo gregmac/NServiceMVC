@@ -14,17 +14,17 @@ namespace NServiceMVC
         public ServiceController()
             : base()
         {
-            ActionInvoker = new ActionInvoker(this);
+            ActionInvoker = new WebStack.ActionInvoker(this);
         }
 
         /// <summary>
         /// Information about the request. 
         /// </summary>
-        public HttpRequestInfo RequestInfo { get; set; }
+        public WebStack.HttpRequestInfo RequestInfo { get; set; }
 
         protected override void  OnActionExecuting(System.Web.Mvc.ActionExecutingContext filterContext)
         {
-            RequestInfo = new HttpRequestInfo(filterContext.HttpContext.Request);
+            RequestInfo = new WebStack.HttpRequestInfo(filterContext.HttpContext.Request);
             base.OnActionExecuting(filterContext);
         }
 

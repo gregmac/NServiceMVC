@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActionInvoker.cs" />
+    <Compile Include="WebStack\ActionInvoker.cs" />
     <Compile Include="Formats\Charset.cs" />
     <Compile Include="Formats\CharsetList.cs" />
     <Compile Include="Formats\FormatManager.cs" />
@@ -63,8 +63,8 @@
     <Compile Include="Formats\Xml\XmlFormatHandler.cs" />
     <Compile Include="Formats\Xml\XsltEngineResult.cs" />
     <Compile Include="Formats\Xml\XsltSerializer.cs" />
-    <Compile Include="HttpRequestInfo.cs" />
-    <Compile Include="MultipleRepresentationsBinder.cs" />
+    <Compile Include="WebStack\HttpRequestInfo.cs" />
+    <Compile Include="WebStack\MultipleRepresentationsBinder.cs" />
     <Compile Include="NServiceMVC.cs" />
     <Compile Include="ServiceController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

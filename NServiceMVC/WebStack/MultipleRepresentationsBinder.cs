@@ -27,7 +27,7 @@ using System.Web;
 using System;
 using NServiceMVC.Formats;
 
-namespace NServiceMVC
+namespace NServiceMVC.WebStack
 {
     class MultipleRepresentationsBinder : IModelBinder
     {

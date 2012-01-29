@@ -27,7 +27,7 @@ using System.Net.Mime;
 using System.Web;
 using NServiceMVC.Formats;
 
-namespace NServiceMVC
+namespace NServiceMVC.WebStack
 {
     /// <summary>
     /// Wraps a HttpRequest and intercepts both Http Verb and Content Type properties

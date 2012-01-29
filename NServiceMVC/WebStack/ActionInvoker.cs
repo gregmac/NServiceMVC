@@ -9,7 +9,7 @@ using System.Web.Mvc;
 using System.Globalization;
 using NServiceMVC.Formats;
 
-namespace NServiceMVC
+namespace NServiceMVC.WebStack
 {
     class ActionInvoker : ControllerActionInvoker
     {
