@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AttributeRouting">
+      <HintPath>..\packages\AttributeRouting.1.3.2\lib\net40\AttributeRouting.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.0.7\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -44,8 +47,17 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WebActivator">
+      <HintPath>..\packages\WebActivator.1.0.0.0\lib\WebActivator.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\AttributeRouting.cs" />
+    <Compile Include="Metadata\MetadataController.cs" />
+    <Compile Include="Metadata\Models\ModelDetails.cs" />
+    <Compile Include="Metadata\Models\RouteDetails.cs" />
+    <Compile Include="Utilities\DefaultValueGenerator.cs" />
+    <Compile Include="Metadata\MetadataReflector.cs" />
     <Compile Include="WebStack\ActionInvoker.cs" />
     <Compile Include="Formats\Charset.cs" />
     <Compile Include="Formats\CharsetList.cs" />
@@ -73,6 +85,7 @@
     <None Include="Formats\Xml\Utilities\xhtml11-flat.dtd" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

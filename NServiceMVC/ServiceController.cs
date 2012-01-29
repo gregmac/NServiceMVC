@@ -9,7 +9,7 @@ using System.Net.Mime;
 
 namespace NServiceMVC
 {
-    public class ServiceController : System.Web.Mvc.Controller 
+    public class ServiceController : System.Web.Mvc.Controller
     {
         public ServiceController()
             : base()

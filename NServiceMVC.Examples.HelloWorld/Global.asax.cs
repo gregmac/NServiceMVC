@@ -21,6 +21,13 @@ namespace NServiceMVC.Examples.HelloWorld
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            routes.MapRoute("MetadataCheat", 
+                "m", 
+                new { controller = "Metadata", action = "Index" },
+                new[] { "NServiceMVC.Metadata" }
+            );
+
+
             routes.MapRoute(
                 "Default", // Route name
                 "{controller}/{action}/{id}", // URL with parameters
