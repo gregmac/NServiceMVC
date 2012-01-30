@@ -10,11 +10,14 @@ Features
 
  * Built on MVC 3
  * Automatically handles decoding of posted data (from JSON, XML, etc) and automatically encodes result as JSON/XML/XHTML/etc depending on Accept headers or `?format=` URL parameter
- * Provides automatic metadata (help) generation for all API paths and model types
+ * Provides (optional) automatic metadata (help) generation for all API paths and model types
  * Attributes are used to configure paths (currently the metadata provider requires this, but the actual API will actually work without attributes, using standard MVC3 routing)
+ * Lightweight. The framework gives you just enough to build a REST service; DI containers, authentication, security, caching, logging, etc are up to you to decide and use what you need (or are already using). There are many solutions to all of these problems in the MVC world aleady, so this framework just builds on top.
 
-Examples
---------
+Show me the code! 
+-----------------
+
+An example controller implementation 
 
 ```csharp
 namespace NServiceMVC.Examples.ComplexApp.Controllers
@@ -51,6 +54,17 @@ namespace NServiceMVC.Examples.ComplexApp.Controllers
 
     }
 }
+```
+
+WebActivator is used to handle startup, but literally the only other code in the MVC project to make the above work is a call to `NServiceMVC.Initialize();`. If you want to enable metadata, there is a small amount of configuration (some of this may become automatic/defaults):
+
+```csharp
+NServiceMVC.Initialize(config =>
+{
+	config.RegisterControllerAssembly(Assembly.GetExecutingAssembly()); 
+	config.RegisterModelAssembly(Assembly.GetExecutingAssembly(), namespace:"NServiceMVC.Examples.Models"); 
+	config.Metadata("metadata"); // serves metadata at /metadata 
+});
 ```
 
 Motivation
@@ -94,7 +108,8 @@ Just to acknowledge some of the major sources of code used to get started:
  * [Resources over MVC](http://rom.codeplex.com/) for model binding and format rendering code 
  * [AttributeRouting](https://github.com/mccalltd/AttributeRouting) for ability to specify HTTP verbs and URLs using atributes
  * [ServiceStack](http://www.servicestack.net) for the XHTML versions of model output
-
+ * [WebActivator](https://bitbucket.org/davidebbo/webactivator) used for startup code
+ 
 Future Direction
 ----------------
 
@@ -102,3 +117,5 @@ I have not started work on this yet, but I am thinking of building a shim so tha
 
 Lots more can be done with metadata. The beginnings of an auto-generated AJAX test client are there, this can be built out much more deeply. Schema generation (eg WSDL) is also an obvious place to go. 
  
+What I do not want to get into is baking-in any cross-cutting concerns (security, logging, caching, etc), and definitely not in the core library. Right now I don't see a need as effectively the service controllers act exactly like normal MVC controllers, and so any existing libraries or code compatible with MVC will work with services implemented on NServiceMVC. 
+
