@@ -37,6 +37,9 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.0.7\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Nustache.Core">
+      <HintPath>..\packages\Nustache.1.0.0.20110812\Net40\Nustache.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -84,6 +87,7 @@
     <Compile Include="ServiceController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebStack\NsVirtualPathProvider.cs" />
+    <Compile Include="WebStack\Nustache.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Formats\Xml\Utilities\xhtml11-flat.dtd" />
@@ -91,6 +95,7 @@
     <EmbeddedResource Include="Metadata\Views\Op.cshtml" />
     <EmbeddedResource Include="Metadata\Views\Type.cshtml" />
     <EmbeddedResource Include="Metadata\Views\Web.config" />
+    <EmbeddedResource Include="Metadata\Views\Index.nustache" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Views\GenericObject.cshtml" />
     <EmbeddedResource Include="Views\Web.config" />

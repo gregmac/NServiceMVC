@@ -10,8 +10,7 @@ namespace NServiceMVC.Metadata
     {
         public ActionResult Index()
         {
-
-            return View(NServiceMVC.VirtualPathPrefix + "NServiceMVC.Metadata.Views.Index.cshtml", 
+            return WebStack.TemplateEngine.RenderView("NServiceMVC.Metadata.Views.Index.nustache", 
                 new Models.MetadataSummary
                 {
                     Routes = MetadataReflector.GetRouteDetails(),

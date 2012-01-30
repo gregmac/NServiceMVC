@@ -1,0 +1,14 @@
+﻿
+<fieldset>
+    <legend>Model: {{Name}}</legend>
+    
+    <div class="display-label">Description</div>
+    <div class="display-field">{{Description}}</div>
+    
+    <div class="display-label">SampleJson</div>
+    <div class="display-field">@Html.TextArea("sampleJson",Model.SampleJson)</div>
+</fieldset>
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>
+

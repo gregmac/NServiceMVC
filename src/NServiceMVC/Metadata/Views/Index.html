@@ -1,0 +1,48 @@
+﻿
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Index</title>
+</head>
+<body>
+    <div>
+        <h2>Operations</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Operation</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+				{{#Routes}}
+					<tr>
+                        <td><a href="metadata/op/{{NiceUrl}}">{{Method}} {{Url}}</a></td>
+                        <td>{{Description}}</td>
+                    </tr>
+				{{/Routes}}
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <h2>Types</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+				{{#Models}}
+					<tr>
+                        <td><a href="metadata/type/{{Name}}">{{Name}}</a></td>
+                        <td>{{Description}}</td>
+                    </tr>
+				{{/Models}}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
