@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace NServiceMVC.Metadata
 {
-    class MetadataController : Controller
+    public class MetadataController : Controller
     {
         public ActionResult Index()
         {
