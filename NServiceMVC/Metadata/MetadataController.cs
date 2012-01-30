@@ -10,7 +10,20 @@ namespace NServiceMVC.Metadata
     {
         public ActionResult Index()
         {
-            return View("GenericObject");
+
+            return View(NServiceMVC.VirtualPathPrefix + "NServiceMVC.Metadata.Views.Index.cshtml", 
+                new Models.MetadataSummary
+                {
+                    Routes = MetadataReflector.GetRouteDetails(),
+                    Models = MetadataReflector.GetModelTypes(),
+                }
+            );
+
+        }
+
+        public ActionResult Test()
+        {
+            return View(NServiceMVC.VirtualPathPrefix + "NServiceMVC.Views.Index.cshtml", new { name = "test" });
         }
     }
 }

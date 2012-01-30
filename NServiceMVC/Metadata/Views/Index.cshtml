@@ -1,0 +1,57 @@
+﻿@inherits System.Web.Mvc.WebViewPage
+@model NServiceMVC.Metadata.Models.MetadataSummary 
+@using NServiceMVC.Metadata.Helpers
+
+@{
+    //Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Index</title>
+</head>
+<body>
+    <div>
+        <h2>Operations</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Operation</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Routes)
+                { 
+                    <tr>
+                        <td><a href="metadata/op/@item.NiceUrl">@item.Method @item.Url</a></td>
+                        <td>@item.Description</td>
+                    </tr>
+                }
+                </tbody>
+        </table>
+    </div>
+    <div>
+        <h2>Types</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Models)
+                { 
+                    <tr>
+                        <td><a href="metadata/type/@item.Name">@item.Name</a></td>
+                        <td>@item.Description</td>
+                    </tr>
+                }
+                </tbody>
+        </table>
+    </div>
+</body>
+</html>

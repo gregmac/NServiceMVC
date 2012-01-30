@@ -16,13 +16,22 @@ namespace NServiceMVC
         public static void Initialize(Action<NsConfiguration> config)
         {
             ModelBinders.Binders.DefaultBinder = (new WebStack.MultipleRepresentationsBinder());
-            
+
+            // Register the virtual path 
+            System.Web.Hosting.HostingEnvironment.RegisterVirtualPathProvider(new WebStack.NsVirtualPathProvider());
+
+
             Configuration = new NsConfiguration();
             // register the assembly that called this one
             Configuration.RegisterControllerAssembly(Assembly.GetCallingAssembly());
 
             if (config != null) config.Invoke(Configuration);
         }
+        
+        /// <summary>
+        /// Prefix for embedded resources
+        /// </summary>
+        public static string VirtualPathPrefix = "~/NServiceMVC.dll/";
 
         public static NsConfiguration Configuration { get; private set; }
 
