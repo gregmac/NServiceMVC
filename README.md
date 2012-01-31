@@ -33,7 +33,7 @@ namespace NServiceMVC.Examples.ComplexApp.Controllers
 
         [POST("users")] // POST /users
         [Description("Create a new user")]
-        public Models.User EditUser(Models.User user)
+        public Models.User CreateUser(Models.User user)
         {
             return MyServiceLayer.Users.Create(user);
         }
