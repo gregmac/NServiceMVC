@@ -91,19 +91,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Formats\Xml\Utilities\xhtml11-flat.dtd" />
-    <EmbeddedResource Include="Metadata\Views\Index.cshtml" />
-    <EmbeddedResource Include="Metadata\Views\Op.cshtml" />
-    <EmbeddedResource Include="Metadata\Views\Type.cshtml" />
-    <EmbeddedResource Include="Metadata\Views\Web.config" />
-    <EmbeddedResource Include="Metadata\Views\Index.nustache" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Views\GenericObject.cshtml" />
-    <EmbeddedResource Include="Views\Web.config" />
     <EmbeddedResource Include="Views\Index.cshtml" />
-    <None Include="Views\_ViewStart.cshtml" />
-    <None Include="web.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Metadata\Views\Index.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Metadata\Views\Op.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Metadata\Views\Type.html" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

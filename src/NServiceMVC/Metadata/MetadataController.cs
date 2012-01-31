@@ -10,7 +10,7 @@ namespace NServiceMVC.Metadata
     {
         public ActionResult Index()
         {
-            return WebStack.TemplateEngine.RenderView("NServiceMVC.Metadata.Views.Index.nustache", 
+            return WebStack.TemplateEngine.RenderView("NServiceMVC.Metadata.Views.Index.html", 
                 new Models.MetadataSummary
                 {
                     Routes = MetadataReflector.GetRouteDetails(),
@@ -20,9 +20,26 @@ namespace NServiceMVC.Metadata
 
         }
 
-        public ActionResult Test()
+        /// <summary>
+        /// View operation
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public ActionResult Op(string id)
         {
-            return View(NServiceMVC.VirtualPathPrefix + "NServiceMVC.Views.Index.cshtml", new { name = "test" });
+            //System.Web.Routing.RouteTable.Routes
+            var route = (from r in MetadataReflector.GetRouteDetails()
+                         where r.NiceUrl == id
+                         select r).FirstOrDefault();
+
+            return WebStack.TemplateEngine.RenderView("NServiceMVC.Metadata.Views.Op.Html", route);
+        }
+
+        public ActionResult Type(string id)
+        {
+            var type = MetadataReflector.GetModelTypes()[id];
+
+            return WebStack.TemplateEngine.RenderView("NServiceMVC.Metadata.Views.Type.Html", type);
         }
     }
 }
