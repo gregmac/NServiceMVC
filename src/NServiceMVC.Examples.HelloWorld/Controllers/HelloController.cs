@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using NServiceMVC;
 using AttributeRouting;
+using System.ComponentModel;
 
 namespace NServiceMVC.Examples.HelloWorld.Controllers
 {
@@ -17,6 +18,7 @@ namespace NServiceMVC.Examples.HelloWorld.Controllers
         }
 
         [GET("hello/{name}")]
+        [Description("Says hello to the name passed in the URL")]
         public Models.HelloResponse Name(string name)
         {
             return new Models.HelloResponse { GreetingType = "Hello", Name = name };
