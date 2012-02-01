@@ -57,8 +57,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AttributeRouting.cs" />
-    <Compile Include="Helpers\HtmlHelpers.cs" />
-    <Compile Include="Metadata\Helpers\HtmlHelpers.cs" />
     <Compile Include="Metadata\MetadataController.cs" />
     <Compile Include="Metadata\Models\MetadataSummary.cs" />
     <Compile Include="Metadata\Models\ModelDetails.cs" />
@@ -93,8 +91,6 @@
   <ItemGroup>
     <None Include="Formats\Xml\Utilities\xhtml11-flat.dtd" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="Views\GenericObject.cshtml" />
-    <EmbeddedResource Include="Views\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\Metadata.html" />
