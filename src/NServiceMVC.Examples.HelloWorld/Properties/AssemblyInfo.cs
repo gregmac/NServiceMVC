@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("NServiceMVC.Examples.HelloWorld")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("NServiceMVC Basic Example")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("NServiceMVC.Examples.HelloWorld")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2012")]
+[assembly: AssemblyCompany("Greg MacLellan")]
+[assembly: AssemblyProduct("NServiceMVC.com")]
+[assembly: AssemblyCopyright("Copyright © Greg MacLellan 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
