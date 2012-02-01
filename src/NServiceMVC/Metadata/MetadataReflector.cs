@@ -19,12 +19,12 @@ namespace NServiceMVC.Metadata
             {
                 var routeDetailsCache = new List<RouteDetails>();
 
-                var methods = from a in NServiceMVC.Configuration.ControllerAssemblies
-                              from c in a.GetTypes()
-                              from m in c.GetMethods()
-                              where c.IsSubclassOf(typeof(ServiceController))
-                              where m.GetCustomAttributes(typeof(AttributeRouting.RouteAttribute), true).Count() > 0
-                              select m;
+                var methods = (from a in NServiceMVC.Configuration.ControllerAssemblies
+                               from c in a.GetTypes()
+                               from m in c.GetMethods()
+                               where c.IsSubclassOf(typeof(ServiceController))
+                               where m.GetCustomAttributes(typeof(AttributeRouting.RouteAttribute), true).Count() > 0
+                               select m).Distinct();
 
                 foreach (var method in methods)
                 {
@@ -129,10 +129,11 @@ namespace NServiceMVC.Metadata
             {
                 List<ModelDetail> models = new List<ModelDetail>();
 
-                var modelTypes = from a in NServiceMVC.Configuration.ModelAssemblies
-                                 from c in a.Assembly.GetTypes()
-                                 where string.IsNullOrEmpty(a.Namespace) || (a.Namespace == c.Namespace)
-                                 select c;
+                var modelTypes = (from a in NServiceMVC.Configuration.ModelAssemblies
+                                  from c in a.Assembly.GetTypes()
+                                  where string.IsNullOrEmpty(a.Namespace) || (a.Namespace == c.Namespace)
+                                  select c).Distinct();
+
 
                 foreach (var model in modelTypes)
                 {
