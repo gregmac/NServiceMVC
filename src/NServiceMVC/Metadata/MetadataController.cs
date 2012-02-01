@@ -10,7 +10,7 @@ namespace NServiceMVC.Metadata
     {
         public ActionResult Index()
         {
-            return Layout("Metadata", "Metadata.html",
+            return Layout("Metadata.html",
                 new
                 {
                     Model = new Models.MetadataSummary
@@ -38,7 +38,7 @@ namespace NServiceMVC.Metadata
                          select r).FirstOrDefault();
 
 
-            return Layout("Title", "Op.html", 
+            return Layout("Op.html", 
                 new
                 {
                     Route = route,
@@ -53,7 +53,7 @@ namespace NServiceMVC.Metadata
         {
             var type = MetadataReflector.GetModelTypes()[id];
 
-            return Layout("Title", "Type.html",
+            return Layout("Type.html",
                 new
                 {
                     Model = type,
@@ -76,7 +76,7 @@ namespace NServiceMVC.Metadata
                             where t.Name == type.FullName
                             select t).FirstOrDefault();
 
-            return Layout("Title", "XhtmlObject.html",
+            return Layout("XhtmlObject.html",
                 new
                 {
                     ObjectJson = Newtonsoft.Json.JsonConvert.SerializeObject(model),
@@ -96,11 +96,11 @@ namespace NServiceMVC.Metadata
         /// <param name="innerView"></param>
         /// <param name="innerModel"></param>
         /// <returns></returns>
-        private ActionResult Layout(string title, string innerView, object innerModel) {
+        private ActionResult Layout(string innerView, object innerModel) {
             return WebStack.TemplateEngine.RenderView("Metadata_Layout.html",
                     new
                     {
-                        MainTitle = title,
+                        MainTitle = NServiceMVC.Configuration.ApplicationTitle,
                         Content = WebStack.TemplateEngine.RenderView(innerView, innerModel).Content,
                         BaseUrl = NServiceMVC.GetBaseUrl(),
                         MetadataUrl = NServiceMVC.GetMetadataUrl(),

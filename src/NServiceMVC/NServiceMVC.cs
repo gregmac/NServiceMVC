@@ -29,11 +29,12 @@ namespace NServiceMVC
             });
             
 
-            Configuration = new NsConfiguration();
+            Configuration = new NsConfiguration(Assembly.GetCallingAssembly());
             // register the assembly that called this one
             Configuration.RegisterControllerAssembly(Assembly.GetCallingAssembly());
 
             if (config != null) config.Invoke(Configuration);
+
         }
 
         #region URLs
@@ -77,12 +78,15 @@ namespace NServiceMVC
         /// </summary>
         public class NsConfiguration
         {
-            public NsConfiguration()
+            public NsConfiguration(Assembly callingAssembly)
             {
                 ControllerAssemblies = new List<System.Reflection.Assembly>();
                 ModelAssemblies = new List<ModelAssembly>();
+                ApplicationTitle = callingAssembly.GetName().Name;
             }
 
+
+            public string ApplicationTitle { get; set; }
 
             #region Controllers
             /// <summary>
