@@ -107,7 +107,7 @@ namespace NServiceMVC
             public string GetMetadataUrl(bool fullPath)  {
                 if (fullPath)
                 {
-                    return UrlHelper.GenerateContentUrl(metadataUrl, new System.Web.HttpContextWrapper(System.Web.HttpContext.Current));
+                    return UrlHelper.GenerateContentUrl("~/" + metadataUrl + '/', new System.Web.HttpContextWrapper(System.Web.HttpContext.Current));
                 }
                 else
                 {
@@ -122,7 +122,7 @@ namespace NServiceMVC
             /// <param name="baseUrl"></param>
             public void Metadata(string baseUrl = "metadata")
             {
-                metadataUrl = baseUrl.TrimEnd('/');
+                metadataUrl = baseUrl.TrimEnd('/').TrimStart(new char[] {'~','/'});
 
                 RouteTable.Routes.Add(new System.Web.Routing.Route(metadataUrl, new MvcRouteHandler()) {
                     Defaults = new RouteValueDictionary(new { controller = "metadata", action = "Index" })
