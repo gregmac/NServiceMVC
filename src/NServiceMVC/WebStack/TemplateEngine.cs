@@ -9,6 +9,12 @@ namespace NServiceMVC.WebStack
 {
     public class TemplateEngine
     {
+        public static string LoadEmbeddedResource(string embeddedResourcePath)
+        {
+            var templateStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedResourcePath);
+            return new System.IO.StreamReader(templateStream).ReadToEnd();
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -16,10 +22,9 @@ namespace NServiceMVC.WebStack
         /// <param name="model"></param>
         /// <exception cref="FileNotFoundException">The resource could not be found</exception>
         /// <returns></returns>
-        public static ContentResult RenderView(string embeddedResourcePath, object model)
+        public static ContentResult RenderView(string viewName, object model)
         {
-            var templateStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedResourcePath);
-            var templateContent = new System.IO.StreamReader(templateStream).ReadToEnd();
+            var templateContent = LoadEmbeddedResource("NServiceMVC.Views." + viewName);
 
 
             var template = DotLiquid.Template.Parse(templateContent);
@@ -41,6 +46,8 @@ namespace NServiceMVC.WebStack
         {
             DotLiquid.Template.NamingConvention = new DotLiquid.NamingConventions.CSharpNamingConvention();
             DotLiquid.Template.RegisterSimpleNamespace("NServiceMVC.Metadata.Models", false);
+            
         }
+
     }
 }

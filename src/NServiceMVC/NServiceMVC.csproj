@@ -96,13 +96,13 @@
     <EmbeddedResource Include="Views\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Metadata\Views\Index.html" />
+    <EmbeddedResource Include="Views\Metadata.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Metadata\Views\Op.html" />
+    <EmbeddedResource Include="Views\Op.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Metadata\Views\Type.html" />
+    <EmbeddedResource Include="Views\Type.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

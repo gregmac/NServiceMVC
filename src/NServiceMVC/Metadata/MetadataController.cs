@@ -10,7 +10,7 @@ namespace NServiceMVC.Metadata
     {
         public ActionResult Index()
         {
-            return WebStack.TemplateEngine.RenderView("NServiceMVC.Metadata.Views.Index.html",
+            return WebStack.TemplateEngine.RenderView("Metadata.html",
                 new
                 {
                     Model = new Models.MetadataSummary
@@ -36,7 +36,7 @@ namespace NServiceMVC.Metadata
                          where r.NiceUrl == id
                          select r).FirstOrDefault();
 
-            return WebStack.TemplateEngine.RenderView("NServiceMVC.Metadata.Views.Op.html", 
+            return WebStack.TemplateEngine.RenderView("Op.html", 
                 new
                 {
                     Route = route,
@@ -49,7 +49,7 @@ namespace NServiceMVC.Metadata
         {
             var type = MetadataReflector.GetModelTypes()[id];
 
-            return WebStack.TemplateEngine.RenderView("NServiceMVC.Metadata.Views.Type.html",
+            return WebStack.TemplateEngine.RenderView("Type.html",
                 new
                 {
                     Model = type,
