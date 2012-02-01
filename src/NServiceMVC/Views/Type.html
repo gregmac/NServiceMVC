@@ -1,16 +1,35 @@
 ﻿
-<fieldset>
-    <legend>Model: {{Model.Name}}</legend>
-    
-    <div class="display-label">Description</div>
-    <div class="display-field">{{Model.Description}}</div>
-    
-    <div class="display-label">SampleJson</div>
-    <div class="display-field">
-        <textarea id="sample-json" cols="60" rows="15">{{Model.SampleJson}}</textarea>
-    </div>
-</fieldset>
-<p>
-    <a href="{{BaseUrl}}">Back to List</a>    
-</p>
+<section id="operation">
+    <h2>{{Model.Name}}</h2>
+    <div class="row">
+        <div class="span12">
+            <h3>Description</h3>
+            <p>
+                {% if Model.Description and Model.Description != "" %}
+                    {{Model.Description}}
+                {% else %}
+                    <em>Not available.</em>
+                {% endif %}
+            </p>
 
+            <h3>Object Model</h3>
+            <ul id="objectmodel-tabs" class="nav nav-tabs">
+                <li class="active"><a href="#objectmodel-json" data-toggle="tab" id="objectmodel-json-tab">JSON</a></li>
+                <li><a href="#objectmodel-xml" data-toggle="tab" id="objectmodel-xml-tab">XML</a></li>
+                <li><a href="#objectmodel-csharp" data-toggle="tab" id="objectmodel-csharp-tab">C#</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="objectmodel-json">
+                    <pre>{{Model.SampleJson}}</pre>
+                </div>
+                <div class="tab-pane" id="objectmodel-xml">
+                    <p><em>Not yet implemented</em></p>
+                </div>
+                <div class="tab-pane" id="objectmodel-csharp">
+                    <p><em>Not yet implemented</em></p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
