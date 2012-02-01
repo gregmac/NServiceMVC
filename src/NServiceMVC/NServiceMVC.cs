@@ -25,7 +25,7 @@ namespace NServiceMVC
             // register our content handler
             RouteTable.Routes.Add(new System.Web.Routing.Route("__NServiceMvcContent/content/{*filename}", new MvcRouteHandler())
             {
-                Defaults = new RouteValueDictionary(new { controller = "NServiceMvcContent", action = "Content" })
+                Defaults = new RouteValueDictionary(new { controller = "NServiceMvcContent", action = "File" })
             });
             
 

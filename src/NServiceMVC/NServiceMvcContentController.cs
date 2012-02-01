@@ -12,7 +12,7 @@ namespace NServiceMVC
     public class NServiceMvcContentController : Controller
     {
 
-        public ActionResult Content(string filename)
+        public ActionResult File(string filename)
         {
             var data = WebStack.TemplateEngine.LoadEmbeddedResource("NServiceMVC.Content." + filename);
             if (data == null)
