@@ -1,0 +1,53 @@
+﻿
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Index</title>
+</head>
+<body>
+Baseurl: {{BaseUrl}}
+    {% for item in Model.Test %}
+        {{item}}
+    {% endfor %}
+			
+    <div>
+        <h2>Operations</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Operation</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for route in Model.Routes %}
+				    <tr>
+                        <td><a href="{{BaseUrl}}op/{{route.NiceUrl}}">{{route.Method}} {{route.Url}}</a></td>
+                        <td>{{route.Description}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <h2>Types</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for type in Model.Models %}
+				    <tr>
+                        <td><a href="{{BaseUrl}}type/{{type.Name}}">{{type.Name}}</a></td>
+                        <td>{{type.Description}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

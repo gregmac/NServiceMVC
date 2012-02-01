@@ -25,6 +25,10 @@ namespace NServiceMVC.Metadata.Models
         public IEnumerable<ParameterDetails> Parameters { get; set; }
 
         public string ModelType { get; set; }
+        /// <summary>
+        /// If we have metadata details for this type (basically, is it a known model type?)
+        /// </summary>
+        public bool ModelHasMetadata { get; set; }
         public string ModelSampleJson { get; set; }
         public string ModelSampleXml { get; set; }
 

@@ -10,20 +10,53 @@ namespace NServiceMVC.Metadata
     {
         public ActionResult Index()
         {
-
-            return View(NServiceMVC.VirtualPathPrefix + "NServiceMVC.Metadata.Views.Index.cshtml", 
-                new Models.MetadataSummary
+            return WebStack.TemplateEngine.RenderView("NServiceMVC.Metadata.Views.Index.html",
+                new
                 {
-                    Routes = MetadataReflector.GetRouteDetails(),
-                    Models = MetadataReflector.GetModelTypes(),
+                    Model = new Models.MetadataSummary
+                    {
+                        Routes = MetadataReflector.GetRouteDetails(),
+                        Models = MetadataReflector.GetModelTypes(),
+                        Test = new List<string>(new string[] { "one", "two", "three"})
+                    },
+                    BaseUrl = NServiceMVC.Configuration.GetMetadataUrl(true)
                 }
             );
 
         }
 
-        public ActionResult Test()
+        /// <summary>
+        /// View operation
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public ActionResult Op(string id)
         {
-            return View(NServiceMVC.VirtualPathPrefix + "NServiceMVC.Views.Index.cshtml", new { name = "test" });
+            //System.Web.Routing.RouteTable.Routes
+            var route = (from r in MetadataReflector.GetRouteDetails()
+                         where r.NiceUrl == id
+                         select r).FirstOrDefault();
+
+            return WebStack.TemplateEngine.RenderView("NServiceMVC.Metadata.Views.Op.html", 
+                new
+                {
+                    Route = route,
+                    BaseUrl = NServiceMVC.Configuration.GetMetadataUrl(true)
+                }
+            );
+        }
+
+        public ActionResult Type(string id)
+        {
+            var type = MetadataReflector.GetModelTypes()[id];
+
+            return WebStack.TemplateEngine.RenderView("NServiceMVC.Metadata.Views.Type.html",
+                new
+                {
+                    Model = type,
+                    BaseUrl = NServiceMVC.Configuration.GetMetadataUrl(true)
+                }
+            );
         }
     }
 }

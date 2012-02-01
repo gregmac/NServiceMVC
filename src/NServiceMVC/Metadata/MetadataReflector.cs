@@ -64,6 +64,9 @@ namespace NServiceMVC.Metadata
                         {
                             route.ModelType = modelParam.ParameterType.FullName;
 
+                            route.ModelHasMetadata = (from t in GetModelTypes() where t.Name == route.ModelType select true).FirstOrDefault();
+
+
                             // create new instance of this type
                             object modelSample = Utilities.DefaultValueGenerator.GetDefaultValue(modelParam.ParameterType);
 
