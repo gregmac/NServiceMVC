@@ -3,7 +3,7 @@
 <section id="operation">
     <h2>{{Route.Method}} {{Route.Url}}</h2>
     <div class="row">
-        <div class="span4">
+        <div class="span12">
             <h3>Description</h3>
             <p>
                 {% if Route.Description != "" %}
@@ -23,8 +23,7 @@
                     <em>Not available.</em>
                 {% endif %}
             </p>
-        </div>
-        <div class="span8">
+
             <h3>URL Parameters</h3>
             {% assign hasParameters = false %}
             {% for t in Route.Parameters %}{% assign hasParameters = true %}{% endfor %} <!-- TODO: there has to be a better way..  -->
