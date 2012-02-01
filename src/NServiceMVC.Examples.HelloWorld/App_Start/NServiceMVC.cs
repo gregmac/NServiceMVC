@@ -13,7 +13,7 @@ namespace NServiceMVC.Examples.HelloWorld.App_Start
             NServiceMVC.Initialize(config =>
             {
                 config.RegisterControllerAssembly(Assembly.GetExecutingAssembly());
-                config.RegisterModelAssembly(Assembly.GetExecutingAssembly(), "NServiceMVC.Examples.Models");
+                config.RegisterModelAssembly(Assembly.GetExecutingAssembly(), "NServiceMVC.Examples.HelloWorld.Models");
                 config.Metadata();
             });
         }
