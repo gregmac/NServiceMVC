@@ -1,15 +1,15 @@
 ﻿
 
-<h2>{{Method}} {{Url}}</h2>
+<h2>{{Route.Method}} {{Route.Url}}</h2>
 
 <fieldset>
     <legend>Description</legend>
 
     <div class="display-label">Operation</div>
-    <div class="display-field">{{Method}} {{Url}}</div>
+    <div class="display-field">{{Route.Method}} {{Route.Url}}</div>
 
     <div class="display-label">Description</div>
-    <div class="display-field">{{Description}}</div>
+    <div class="display-field">{{Route.Description}}</div>
 
     <div class="display-label">URL Parameters</div>
     <div class="display-field">
@@ -22,19 +22,25 @@
                 </tr>
             </thead>
             <tbody>
-            {{#Parameters}}
+            {% for item in Route.Parameters %}
                 <tr>
-                    <td>{{Name}}</td>
-                    <td>{{Type}}</td>
-                    <td>{{Default}}</td>
+                    <td>{{item.Name}}</td>
+                    <td>{{item.Type}}</td>
+                    <td>{{item.Default}}</td>
                 </tr>
-            {{/Parameters}}
+            {% endfor %}
             </tbody>
         </table>
     </div>
     
     <div class="display-label">Model Type</div>
-    <div class="display-field">@Html.MetadataTypeLink(Model.ModelType)</div>
+    <div class="display-field">
+        {% if Model.ModelHasMetadata %}
+            <a href="{{BaseUrl}}type/{{Route.ModelType}}">{{Route.ModelType}}</a>
+        {% else %}
+            {{Route.ModelType}}
+        {% endif %}
+    </div>
     
     <div class="display-label">Return Type</div>
     <div class="display-field"></div>
@@ -44,41 +50,39 @@
 
     <div class="display-label">URL</div>
     <div class="display-field">
-        {{Method}} @Html.TextBox("test-json-url", Model.Url)
+        {{Method}} <input id="test-json-url" value="{{Route.Url}}" />
     </div>
 
-    @if (Model.Method == "POST" || Model.Method == "PUT" || Model.Method == "DELETE")
-    { 
+    {% if (Model.Method == "POST" || Model.Method == "PUT" || Model.Method == "DELETE") %}
         <div class="display-label">Body</div>
         <div class="display-field">
-            @Html.TextArea("test-json-body", Model.ModelSampleJson)
+            <textarea id="test-json-body" cols="60" rows="10">{{Model.ModelSampleJson}}</textarea>
         </div>
-    }
+    {% endif %}
     
     <button id="test-json">Go</button>
 
     <div class="display-label">Response Header</div>
     <div class="display-field">
-        <textarea id="test-json-response-header"></textarea>
+        <textarea id="test-json-response-header" cols="60" rows="10"></textarea>
     </div>
 
     <div class="display-label">Response Body</div>
     <div class="display-field">
-        <textarea id="test-json-response"></textarea>
+        <textarea id="test-json-response" cols="60" rows="10"s></textarea>
     </div>
 
 </fieldset>
 <p>
-    @Html.ActionLink("Back to List", "Index")
-    
+    <a href="{{BaseUrl}}">Back to List</a>    
 </p>
 <script type="text/javascript">
     $(function () {
         $("#test-json").click(function () {
-            var url = '@UrlHelper.GenerateContentUrl("~", ViewContext.HttpContext)' + $("#test-json-url").val();
+            var url = '{{BaseUrl}}' + $("#test-json-url").val();
             console.log("Going to ", url);
             $.ajax(url, {
-                type: '@Model.Method',
+                type: '{{Route.Method}}',
                 dataType: 'json',
                 success: function (data, textStatus, jqXHR) {
                     var head = jqXHR.getAllResponseHeaders();

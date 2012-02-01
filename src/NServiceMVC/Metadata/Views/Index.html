@@ -6,6 +6,11 @@
     <title>Index</title>
 </head>
 <body>
+Baseurl: {{BaseUrl}}
+    {% for item in Model.Test %}
+        {{item}}
+    {% endfor %}
+			
     <div>
         <h2>Operations</h2>
         <table>
@@ -16,12 +21,12 @@
                 </tr>
             </thead>
             <tbody>
-				{{#Routes}}
-					<tr>
-                        <td><a href="metadata/op/{{NiceUrl}}">{{Method}} {{Url}}</a></td>
-                        <td>{{Description}}</td>
+                {% for route in Model.Routes %}
+				    <tr>
+                        <td><a href="{{BaseUrl}}op/{{route.NiceUrl}}">{{route.Method}} {{route.Url}}</a></td>
+                        <td>{{route.Description}}</td>
                     </tr>
-				{{/Routes}}
+                {% endfor %}
             </tbody>
         </table>
     </div>
@@ -35,12 +40,12 @@
                 </tr>
             </thead>
             <tbody>
-				{{#Models}}
-					<tr>
-                        <td><a href="metadata/type/{{Name}}">{{Name}}</a></td>
-                        <td>{{Description}}</td>
+                {% for type in Model.Models %}
+				    <tr>
+                        <td><a href="{{BaseUrl}}type/{{type.Name}}">{{type.Name}}</a></td>
+                        <td>{{type.Description}}</td>
                     </tr>
-				{{/Models}}
+                {% endfor %}
             </tbody>
         </table>
     </div>

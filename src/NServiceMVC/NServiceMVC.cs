@@ -17,8 +17,10 @@ namespace NServiceMVC
         {
             ModelBinders.Binders.DefaultBinder = (new WebStack.MultipleRepresentationsBinder());
 
-            // Register the virtual path 
-            System.Web.Hosting.HostingEnvironment.RegisterVirtualPathProvider(new WebStack.NsVirtualPathProvider());
+            // Register the virtual path  (razor views -- to be deleted I guess?)
+            //System.Web.Hosting.HostingEnvironment.RegisterVirtualPathProvider(new WebStack.NsVirtualPathProvider());
+
+            WebStack.TemplateEngine.Initialize();
 
 
             Configuration = new NsConfiguration();
@@ -27,11 +29,6 @@ namespace NServiceMVC
 
             if (config != null) config.Invoke(Configuration);
         }
-        
-        /// <summary>
-        /// Prefix for embedded resources
-        /// </summary>
-        public static string VirtualPathPrefix = "~/NServiceMVC.dll/";
 
         public static NsConfiguration Configuration { get; private set; }
 
@@ -100,15 +97,38 @@ namespace NServiceMVC
             #endregion
 
             #region Metadata
+
+            private string metadataUrl;
+            /// <summary>
+            /// Gets the metadata URL. 
+            /// </summary>
+            /// <param name="fullPath">If true, gets the full URL path. If false, just returns the url relative to the virtual application root</param>
+            /// <returns></returns>
+            public string GetMetadataUrl(bool fullPath)  {
+                if (fullPath)
+                {
+                    return UrlHelper.GenerateContentUrl(metadataUrl, new System.Web.HttpContextWrapper(System.Web.HttpContext.Current));
+                }
+                else
+                {
+                    return metadataUrl;
+                }
+                
+            }
+
+            /// <summary>
+            /// Set the location where metadata is served from
+            /// </summary>
+            /// <param name="baseUrl"></param>
             public void Metadata(string baseUrl = "metadata")
             {
-                baseUrl = baseUrl.TrimEnd('/');
+                metadataUrl = baseUrl.TrimEnd('/');
 
-                RouteTable.Routes.Add(new System.Web.Routing.Route(baseUrl, new MvcRouteHandler()) {
+                RouteTable.Routes.Add(new System.Web.Routing.Route(metadataUrl, new MvcRouteHandler()) {
                     Defaults = new RouteValueDictionary(new { controller = "metadata", action = "Index" })
                 });
                    
-                RouteTable.Routes.Add(new System.Web.Routing.Route(baseUrl + "/{action}/{*id}",new MvcRouteHandler()) {
+                RouteTable.Routes.Add(new System.Web.Routing.Route(metadataUrl + "/{action}/{*id}", new MvcRouteHandler()) {
                     Defaults = new RouteValueDictionary(new { controller = "metadata" })
                 });
                     

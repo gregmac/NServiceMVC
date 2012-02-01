@@ -10,11 +10,16 @@ namespace NServiceMVC.Metadata
     {
         public ActionResult Index()
         {
-            return WebStack.TemplateEngine.RenderView("NServiceMVC.Metadata.Views.Index.html", 
-                new Models.MetadataSummary
+            return WebStack.TemplateEngine.RenderView("NServiceMVC.Metadata.Views.Index.html",
+                new
                 {
-                    Routes = MetadataReflector.GetRouteDetails(),
-                    Models = MetadataReflector.GetModelTypes(),
+                    Model = new Models.MetadataSummary
+                    {
+                        Routes = MetadataReflector.GetRouteDetails(),
+                        Models = MetadataReflector.GetModelTypes(),
+                        Test = new List<string>(new string[] { "one", "two", "three"})
+                    },
+                    BaseUrl = NServiceMVC.Configuration.GetMetadataUrl(true)
                 }
             );
 
@@ -32,14 +37,26 @@ namespace NServiceMVC.Metadata
                          where r.NiceUrl == id
                          select r).FirstOrDefault();
 
-            return WebStack.TemplateEngine.RenderView("NServiceMVC.Metadata.Views.Op.Html", route);
+            return WebStack.TemplateEngine.RenderView("NServiceMVC.Metadata.Views.Op.html", 
+                new
+                {
+                    Route = route,
+                    BaseUrl = NServiceMVC.Configuration.GetMetadataUrl(true)
+                }
+            );
         }
 
         public ActionResult Type(string id)
         {
             var type = MetadataReflector.GetModelTypes()[id];
 
-            return WebStack.TemplateEngine.RenderView("NServiceMVC.Metadata.Views.Type.Html", type);
+            return WebStack.TemplateEngine.RenderView("NServiceMVC.Metadata.Views.Type.html",
+                new
+                {
+                    Model = type,
+                    BaseUrl = NServiceMVC.Configuration.GetMetadataUrl(true)
+                }
+            );
         }
     }
 }

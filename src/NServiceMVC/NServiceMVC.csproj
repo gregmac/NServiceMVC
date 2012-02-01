@@ -34,11 +34,12 @@
     <Reference Include="AttributeRouting">
       <HintPath>..\packages\AttributeRouting.1.3.2\lib\net40\AttributeRouting.dll</HintPath>
     </Reference>
+    <Reference Include="DotLiquid, Version=1.6.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\DotLiquid.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.0.7\lib\net40\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Nustache.Core">
-      <HintPath>..\packages\Nustache.1.0.0.20110812\Net40\Nustache.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -86,8 +87,7 @@
     <Compile Include="NServiceMVC.cs" />
     <Compile Include="ServiceController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebStack\NsVirtualPathProvider.cs" />
-    <Compile Include="WebStack\Nustache.cs" />
+    <Compile Include="WebStack\TemplateEngine.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Formats\Xml\Utilities\xhtml11-flat.dtd" />
