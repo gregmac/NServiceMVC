@@ -9,10 +9,23 @@ namespace NServiceMVC.WebStack
 {
     public class TemplateEngine
     {
+        /// <summary>
+        /// Loads an embedded resource. Returns null if there is a problem (eg, not found).
+        /// </summary>
+        /// <param name="embeddedResourcePath">The full resource path (including namespace)</param>
+        /// <returns></returns>
         public static string LoadEmbeddedResource(string embeddedResourcePath)
         {
-            var templateStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedResourcePath);
-            return new System.IO.StreamReader(templateStream).ReadToEnd();
+            try
+            {
+                var templateStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedResourcePath);
+                return new System.IO.StreamReader(templateStream).ReadToEnd();
+            }
+            catch (Exception)
+            {
+                return null; // could do this better but it's not all that important
+            }
+            
         }
 
         /// <summary>
@@ -25,6 +38,7 @@ namespace NServiceMVC.WebStack
         public static ContentResult RenderView(string viewName, object model)
         {
             var templateContent = LoadEmbeddedResource("NServiceMVC.Views." + viewName);
+            if (templateContent == null) templateContent = string.Format("View {0} not found", viewName);
 
 
             var template = DotLiquid.Template.Parse(templateContent);

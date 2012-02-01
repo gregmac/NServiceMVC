@@ -10,7 +10,7 @@ namespace NServiceMVC.Metadata
     {
         public ActionResult Index()
         {
-            return WebStack.TemplateEngine.RenderView("Metadata.html",
+            return Layout("Metadata", "Metadata.html",
                 new
                 {
                     Model = new Models.MetadataSummary
@@ -18,10 +18,11 @@ namespace NServiceMVC.Metadata
                         Routes = MetadataReflector.GetRouteDetails(),
                         Models = MetadataReflector.GetModelTypes(),
                     },
-                    BaseUrl = NServiceMVC.Configuration.GetMetadataUrl(true)
+                    BaseUrl = NServiceMVC.GetBaseUrl(),
+                    MetadataUrl = NServiceMVC.GetMetadataUrl(),
+                    ContentUrl = NServiceMVC.GetContentUrl(),
                 }
             );
-
         }
 
         /// <summary>
@@ -36,11 +37,14 @@ namespace NServiceMVC.Metadata
                          where r.NiceUrl == id
                          select r).FirstOrDefault();
 
-            return WebStack.TemplateEngine.RenderView("Op.html", 
+
+            return Layout("Title", "Op.html", 
                 new
                 {
                     Route = route,
-                    BaseUrl = NServiceMVC.Configuration.GetMetadataUrl(true)
+                    BaseUrl = NServiceMVC.GetBaseUrl(),
+                    MetadataUrl = NServiceMVC.GetMetadataUrl(),
+                    ContentUrl = NServiceMVC.GetContentUrl(),
                 }
             );
         }
@@ -49,13 +53,35 @@ namespace NServiceMVC.Metadata
         {
             var type = MetadataReflector.GetModelTypes()[id];
 
-            return WebStack.TemplateEngine.RenderView("Type.html",
+            return Layout("Title", "Type.html",
                 new
                 {
                     Model = type,
-                    BaseUrl = NServiceMVC.Configuration.GetMetadataUrl(true)
+                    BaseUrl = NServiceMVC.GetBaseUrl(),
+                    MetadataUrl = NServiceMVC.GetMetadataUrl(),
+                    ContentUrl = NServiceMVC.GetContentUrl(),
                 }
             );
+        }
+
+        /// <summary>
+        /// Wraps the outer template around the requested template
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="innerView"></param>
+        /// <param name="innerModel"></param>
+        /// <returns></returns>
+        private ActionResult Layout(string title, string innerView, object innerModel) {
+            return WebStack.TemplateEngine.RenderView("Metadata_Layout.html",
+                    new
+                    {
+                        MainTitle = title,
+                        Content = WebStack.TemplateEngine.RenderView(innerView, innerModel).Content,
+                        BaseUrl = NServiceMVC.GetBaseUrl(),
+                        MetadataUrl = NServiceMVC.GetMetadataUrl(),
+                        ContentUrl = NServiceMVC.GetContentUrl(),
+                    }
+                );
         }
     }
 }

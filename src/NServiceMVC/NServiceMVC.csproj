@@ -63,6 +63,7 @@
     <Compile Include="Metadata\Models\MetadataSummary.cs" />
     <Compile Include="Metadata\Models\ModelDetails.cs" />
     <Compile Include="Metadata\Models\RouteDetails.cs" />
+    <Compile Include="NServiceMvcContentController.cs" />
     <Compile Include="Utilities\DefaultValueGenerator.cs" />
     <Compile Include="Metadata\MetadataReflector.cs" />
     <Compile Include="WebStack\ActionInvoker.cs" />
@@ -103,6 +104,21 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\Type.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\Metadata_Layout.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\XhtmlObject.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Content\bootstrap.css" />
+    <None Include="Content\bootstrap.js" />
+    <EmbeddedResource Include="Content\bootstrap.min.css" />
+    <EmbeddedResource Include="Content\bootstrap.min.js" />
+    <None Include="Content\glyphicons-halflings-white.png" />
+    <EmbeddedResource Include="Content\glyphicons-halflings.png" />
+    <EmbeddedResource Include="Content\jquery-1.7.1.min.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

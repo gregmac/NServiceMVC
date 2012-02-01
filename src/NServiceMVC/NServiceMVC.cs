@@ -22,6 +22,12 @@ namespace NServiceMVC
 
             WebStack.TemplateEngine.Initialize();
 
+            // register our content handler
+            RouteTable.Routes.Add(new System.Web.Routing.Route("__NServiceMvcContent/content/{*filename}", new MvcRouteHandler())
+            {
+                Defaults = new RouteValueDictionary(new { controller = "NServiceMvcContent", action = "Content" })
+            });
+            
 
             Configuration = new NsConfiguration();
             // register the assembly that called this one
@@ -30,8 +36,45 @@ namespace NServiceMVC
             if (config != null) config.Invoke(Configuration);
         }
 
+        #region URLs
+
+        /// <summary>
+        /// Gets a URL to the NServiceMVC static content provider
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        public static string GetContentUrl(string filename = "")
+        {
+            return GetBaseUrl("__NServiceMvcContent/content/" + filename);
+        }
+
+        /// <summary>
+        /// Gets the base web application URL 
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        public static string GetBaseUrl(string path = "")
+        {
+            return UrlHelper.GenerateContentUrl("~/" + path, new System.Web.HttpContextWrapper(System.Web.HttpContext.Current));
+        }
+
+        /// <summary>
+        /// Gets the metadata URL. 
+        /// </summary>
+        /// <param name="fullPath">If true, gets the full URL path. If false, just returns the url relative to the virtual application root</param>
+        /// <returns></returns>
+        public static string GetMetadataUrl(string path = "")
+        {
+            return GetBaseUrl(Configuration.MetadataUrl + "/" + path);
+        }
+
+        #endregion
+
         public static NsConfiguration Configuration { get; private set; }
 
+        /// <summary>
+        /// NServiceMVC configuration
+        /// </summary>
         public class NsConfiguration
         {
             public NsConfiguration()
@@ -98,23 +141,10 @@ namespace NServiceMVC
 
             #region Metadata
 
-            private string metadataUrl;
             /// <summary>
-            /// Gets the metadata URL. 
+            /// The path (relative to virtual app dir) to the metadata controller
             /// </summary>
-            /// <param name="fullPath">If true, gets the full URL path. If false, just returns the url relative to the virtual application root</param>
-            /// <returns></returns>
-            public string GetMetadataUrl(bool fullPath)  {
-                if (fullPath)
-                {
-                    return UrlHelper.GenerateContentUrl("~/" + metadataUrl + '/', new System.Web.HttpContextWrapper(System.Web.HttpContext.Current));
-                }
-                else
-                {
-                    return metadataUrl;
-                }
-                
-            }
+            public string MetadataUrl { get; private set; }
 
             /// <summary>
             /// Set the location where metadata is served from
@@ -122,13 +152,13 @@ namespace NServiceMVC
             /// <param name="baseUrl"></param>
             public void Metadata(string baseUrl = "metadata")
             {
-                metadataUrl = baseUrl.TrimEnd('/').TrimStart(new char[] {'~','/'});
+                MetadataUrl = baseUrl.TrimEnd('/').TrimStart(new char[] {'~','/'});
 
-                RouteTable.Routes.Add(new System.Web.Routing.Route(metadataUrl, new MvcRouteHandler()) {
+                RouteTable.Routes.Add(new System.Web.Routing.Route(MetadataUrl, new MvcRouteHandler()) {
                     Defaults = new RouteValueDictionary(new { controller = "metadata", action = "Index" })
                 });
                    
-                RouteTable.Routes.Add(new System.Web.Routing.Route(metadataUrl + "/{action}/{*id}", new MvcRouteHandler()) {
+                RouteTable.Routes.Add(new System.Web.Routing.Route(MetadataUrl + "/{action}/{*id}", new MvcRouteHandler()) {
                     Defaults = new RouteValueDictionary(new { controller = "metadata" })
                 });
                     
