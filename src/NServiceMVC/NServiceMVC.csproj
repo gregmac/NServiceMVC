@@ -109,12 +109,11 @@
     <EmbeddedResource Include="Views\Metadata_Layout.html" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\XhtmlObject.html" />
+    <EmbeddedResource Include="Views\XhtmlObject.html" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Content\bootstrap.css" />
+    <EmbeddedResource Include="Content\bootstrap.css" />
     <None Include="Content\bootstrap.js" />
-    <EmbeddedResource Include="Content\bootstrap.min.css" />
     <EmbeddedResource Include="Content\bootstrap.min.js" />
     <None Include="Content\glyphicons-halflings-white.png" />
     <EmbeddedResource Include="Content\glyphicons-halflings.png" />
