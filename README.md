@@ -40,18 +40,25 @@ namespace NServiceMVC.Examples.ComplexApp.Controllers
 
         [GET("users/{userId}")] // POST /users/123
         [Description("Load a user")]
-        public ActionResult Detail(int userId)
+        public Models.User Detail(int userId)
         {
             return MyServiceLayer.Users.LoadById(userId);
         }
 
         [PUT("users/{userId}")]  // PUT /users/123
         [Description("Edit an existing user")]
-        public ActionResult EditUser(Guid userId, Models.User user)
+        public bool EditUser(Guid userId, Models.User user)
         {
+            user.userId = userId; 
             return MyServiceLayer.Users.Update(user);
         }
 
+        [DELETE("users/{userId}")]  // DELETE /users/123
+        [Description("Delete an existing user")]
+        public bool EditUser(Guid userId)
+        {
+            return MyServiceLayer.Users.Delete(userId);
+        }
     }
 }
 ```
