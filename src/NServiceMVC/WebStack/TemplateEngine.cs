@@ -30,6 +30,9 @@ namespace NServiceMVC.WebStack
             var template = DotLiquid.Template.Parse(templateContent);
             // TODO: cache 
 
+
+            template.Registers.Add("file_system", new EmbeddedResourceFileProvider());
+
             
             var output = template.Render(DotLiquid.Hash.FromAnonymousObject(model));
 
@@ -49,5 +52,15 @@ namespace NServiceMVC.WebStack
             
         }
 
+        /// <summary>
+        /// Provider that allows DotLiquid includes from embedded resources
+        /// </summary>
+        public class EmbeddedResourceFileProvider : DotLiquid.FileSystems.IFileSystem
+        {
+            public string ReadTemplateFile(DotLiquid.Context context, string templateName)
+            {
+                return LoadEmbeddedResource("NServiceMVC.Views." + templateName);
+            }
+        }
     }
 }
