@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
 using System.Reflection;
+using NServiceMVC;
 
 [assembly: WebActivator.PreApplicationStartMethod(typeof(NServiceMVC.Examples.HelloWorld.App_Start.NServiceMVCActivator), "Start")]
 

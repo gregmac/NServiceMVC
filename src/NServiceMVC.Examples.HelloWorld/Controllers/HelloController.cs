@@ -17,6 +17,15 @@ namespace NServiceMVC.Examples.HelloWorld.Controllers
             return new Models.HelloResponse { GreetingType = "Hello" };
         }
 
+        [POST("hello")]
+        public Models.HelloResponse Index(Models.NameDetails details)
+        {
+            return new Models.HelloResponse { 
+                GreetingType = "Hello", 
+                Name = details.FirstName + ' ' + details.LastName,
+            };
+        }
+
         [GET("hello/{name}")]
         [Description("Says hello to the name passed in the URL")]
         public Models.HelloResponse Name(string name)

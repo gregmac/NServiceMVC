@@ -13,17 +13,6 @@
                 {% endif %}
             </p>
 
-            <h3>Return Type</h3>
-            <p>
-                {% if Route.ReturnType.HasMetadata %}
-                    <a href="{{MetadataUrl}}type/{{Route.ReturnType.Name | escape}}">{{Route.ReturnType.Name}}</a>
-                {% elseif Route.ReturnType.Name %}
-                    {{Route.ReturnType.Name}}
-                {% else %}
-                    <em>Not available.</em>
-                {% endif %}
-            </p>
-
             <h3>URL Parameters</h3>
             {% assign hasParameters = false %}
             {% for t in Route.Parameters %}{% assign hasParameters = true %}{% endfor %} <!-- TODO: there has to be a better way..  -->
@@ -62,6 +51,18 @@
                     <em>No model for this operation.</em>
                 {% endif %}
             </p>
+
+            
+            <h3>Return Type</h3>
+            <p>
+                {% if Route.ReturnType.HasMetadata %}
+                    <a href="{{MetadataUrl}}type/{{Route.ReturnType.Name | escape}}">{{Route.ReturnType.Name}}</a>
+                {% elseif Route.ReturnType.Name %}
+                    {{Route.ReturnType.Name}}
+                {% else %}
+                    <em>Not available.</em>
+                {% endif %}
+            </p>
         </div>
     </div>
 </section>
@@ -83,7 +84,7 @@
 
                         <p>
                         {% if (Route.Method == "POST" || Route.Method == "PUT" || Route.Method == "DELETE") %}
-                            <textarea id="test-json-body" cols="60" rows="10">{{Route.ModelSampleJson}}</textarea>
+                            <textarea id="test-json-body" cols="80" rows="10">{{Route.ModelType.SampleJson}}</textarea>
                         {% endif %}
                         </p>
                     </form>
@@ -115,9 +116,18 @@
         $("#test-json-go").click(function () {
             var url = '{{BaseUrl}}' + $("#test-json-url").val();
             console.log("Going to ", url);
+
+            var postdata = $('#test-json-body').val();
+            if (postdata) {
+                postdata = $.parseJSON(postdata);
+                // TODO: if failed, show error
+                console.log('postdata', postdata);
+            }
+
             $.ajax(url, {
                 type: '{{Route.Method}}',
                 dataType: 'json',
+                data: postdata,
                 success: function (data, textStatus, jqXHR) {
                     var head = jqXHR.getAllResponseHeaders();
                     $('#test-response-headers-code').text(head);
@@ -128,7 +138,11 @@
                     $('#test-response-headers-code').text(jqXHR.getAllResponseHeaders());
                     $('#test-response-body-code').text(jqXHR.responseText);
                     $('#test-response-headers-tab').tab('show');
-                }
+                },
+                beforeSed: function (jqXHR, settings) {
+                    console.log('beforeSend', jqXHR, settings);
+                },
+                cache: false
             });
             return false;
         });
