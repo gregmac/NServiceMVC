@@ -12,6 +12,17 @@
                     <em>Not available.</em>
                 {% endif %}
             </p>
+
+            <h3>Return Type</h3>
+            <p>
+                {% if Route.ReturnType.HasMetadata %}
+                    <a href="{{MetadataUrl}}type/{{Route.ReturnType.Name | escape}}">{{Route.ReturnType.Name}}</a>
+                {% elseif Route.ReturnType.Name %}
+                    {{Route.ReturnType.Name}}
+                {% else %}
+                    <em>Not available.</em>
+                {% endif %}
+            </p>
         </div>
         <div class="span8">
             <h3>URL Parameters</h3>
@@ -44,10 +55,10 @@
 
             <h3>Model Type <small>Data type sent as body</small></h3>
             <p>
-                {% if Route.ModelHasMetadata %}
-                    <a href="{{MetadataUrl}}type/{{Route.ModelType}}">{{Route.ModelType}}</a>
-                {% elseif Route.ModelType %}
-                    {{Route.ModelType}}
+                {% if Route.ModelType.HasMetadata %}
+                    <a href="{{MetadataUrl}}type/{{Route.ModelType.Name | escape}}">{{Route.ModelType.Name}}</a>
+                {% elseif Route.ModelType.Name %}
+                    {{Route.ModelType.Name}}
                 {% else %}
                     <em>No model for this operation.</em>
                 {% endif %}

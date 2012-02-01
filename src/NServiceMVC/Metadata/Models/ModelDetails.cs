@@ -10,9 +10,18 @@ namespace NServiceMVC.Metadata.Models
     /// </summary>
     public class ModelDetail
     {
+        /// <summary>
+        /// The full name of the type
+        /// </summary>
         public string Name { get; set; }
-        public string SampleJson { get; set; }
         public string Description { get; set; }
+
+        /// <summary>
+        /// If this is a known type we can serve metadata for
+        /// </summary>
+        public bool HasMetadata { get; set; }
+
+        public string SampleJson { get; set; }
     }
 
     public class ModelDetailCollection : System.Collections.ObjectModel.KeyedCollection<string, ModelDetail>

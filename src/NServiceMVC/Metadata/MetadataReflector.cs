@@ -34,8 +34,6 @@ namespace NServiceMVC.Metadata
                     string description = string.Empty;
                     if (descriptionAttr != null) description = descriptionAttr.Description;
 
-                    //var model = from p in 
-
 
                     var routeAttrs = from a in method.GetCustomAttributes(typeof(AttributeRouting.RouteAttribute), true)
                                      select (AttributeRouting.RouteAttribute)a;
@@ -47,6 +45,7 @@ namespace NServiceMVC.Metadata
                             Url = routeAttr.Url,
                             Method = GetHttpMethod(routeAttr.HttpMethods),
                             Description = description,
+                            ReturnType = CreateModelDetail(method.ReturnType),
                         };
 
                         // find names of parameters that exist in the URL
@@ -62,16 +61,11 @@ namespace NServiceMVC.Metadata
                                           select p).FirstOrDefault();
                         if (modelParam != null)
                         {
-                            route.ModelType = modelParam.ParameterType.FullName;
-
-                            route.ModelHasMetadata = (from t in GetModelTypes() where t.Name == route.ModelType select true).FirstOrDefault();
-
-
-                            // create new instance of this type
-                            object modelSample = Utilities.DefaultValueGenerator.GetDefaultValue(modelParam.ParameterType);
-
-                            route.ModelSampleJson = Newtonsoft.Json.JsonConvert.SerializeObject(modelSample);
+                            route.ModelType = CreateModelDetail(modelParam.ParameterType);
                         }
+
+
+
 
                         var actualParamNames = from p in actualParams
                                                select p.Name;
@@ -142,18 +136,7 @@ namespace NServiceMVC.Metadata
 
                 foreach (var model in modelTypes)
                 {
-                    var detail = new ModelDetail
-                    {
-                        Name = model.FullName,
-                    };
-
-                    var descriptionAttr = (System.ComponentModel.DescriptionAttribute)(model.GetCustomAttributes(typeof(System.ComponentModel.DescriptionAttribute), true).FirstOrDefault());
-                    if (descriptionAttr != null) detail.Description = descriptionAttr.Description;
-
-                    object modelSample = Utilities.DefaultValueGenerator.GetDefaultValue(model);
-
-                    detail.SampleJson = Newtonsoft.Json.JsonConvert.SerializeObject(modelSample);
-
+                    var detail = CreateModelDetail(model, hasMetadata:true);
                     models.Add(detail);
                 }
 
@@ -162,5 +145,39 @@ namespace NServiceMVC.Metadata
             return _modelTypesCache;
         }
         #endregion
+
+        /// <summary>
+        /// Creates a new modelDetail object, and checks MetadataReflector.GetModelTypes() to see if 
+        /// we have metadata
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private static ModelDetail CreateModelDetail(System.Type type)
+        {
+            var hasMetadata = (from t in GetModelTypes() where t.Name == type.FullName select true).FirstOrDefault();
+            return CreateModelDetail(type, hasMetadata);
+        }
+        /// <summary>
+        /// Creates a new modelDetail object
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private static ModelDetail CreateModelDetail(System.Type type, bool hasMetadata)
+        {
+            var detail = new ModelDetail
+            {
+                Name = type.FullName,
+                HasMetadata = hasMetadata,
+            };
+
+            var descriptionAttr = (System.ComponentModel.DescriptionAttribute)(type.GetCustomAttributes(typeof(System.ComponentModel.DescriptionAttribute), true).FirstOrDefault());
+            if (descriptionAttr != null) detail.Description = descriptionAttr.Description;
+
+            object modelSample = Utilities.DefaultValueGenerator.GetDefaultValue(type);
+
+            detail.SampleJson = Newtonsoft.Json.JsonConvert.SerializeObject(modelSample);
+
+            return detail;
+        }
     }
 }
