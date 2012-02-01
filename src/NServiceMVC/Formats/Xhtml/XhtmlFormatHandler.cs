@@ -54,18 +54,12 @@ namespace NServiceMVC.Formats.Xhtml
 
         public ActionResult TryCreateActionResult(string viewName, object model, ContentType responseContentType, CharsetList acceptCharsetList)
         {
-            ViewResult viewResult = null;
             if (IsCompatibleMediaType(responseContentType.MediaType))
             {
-                viewResult = new ViewResult
-                                 {
-                                     ViewName = viewName,
-                                     MasterName = null,
-                                     ViewData = new ViewDataDictionary(model)
-                                 };
+                return (new Metadata.MetadataController()).XhtmlObject(model);
             }
 
-            return viewResult;
+            return null;
         }
 
         public bool TryDeserializeRequestRepresentation(ControllerContext controllerContext, ModelBindingContext bindingContext, ContentType requestContentType, out object model)

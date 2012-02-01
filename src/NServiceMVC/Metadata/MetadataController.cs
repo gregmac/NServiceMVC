@@ -65,6 +65,31 @@ namespace NServiceMVC.Metadata
         }
 
         /// <summary>
+        /// Used by XhtmlFormatHandler to output raw model
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public ActionResult XhtmlObject(object model)
+        {
+            var type = model.GetType();
+            var metadata = (from t in MetadataReflector.GetModelTypes()
+                            where t.Name == type.FullName
+                            select t).FirstOrDefault();
+
+            return Layout("Title", "XhtmlObject.html",
+                new
+                {
+                    ObjectJson = Newtonsoft.Json.JsonConvert.SerializeObject(model),
+                    Metadata = metadata,
+                    ModelType = (metadata != null) ? metadata.Name : type.FullName,
+                    BaseUrl = NServiceMVC.GetBaseUrl(),
+                    MetadataUrl = NServiceMVC.GetMetadataUrl(),
+                    ContentUrl = NServiceMVC.GetContentUrl(),
+                }
+            );
+        }
+
+        /// <summary>
         /// Wraps the outer template around the requested template
         /// </summary>
         /// <param name="title"></param>
