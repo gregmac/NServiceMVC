@@ -29,13 +29,22 @@
 	<!-- used to actually invoke msbuild on the main .sln file. This does the actual compile -->
 	<Target Name="BuildMainSolution" DependsOnTargets="UpdateAssemblyInfoVersion">
 		<Message Text="##teamcity[progressMessage 'Running main build']" Importance="High" />
-		<MSBuild Projects="../src/NServiceMVC.sln" Properties="Configuration=$(Configuration)" Targets="Rebuild"/>
+		<MSBuild Projects="../src/NServiceMVC.sln" Properties="Configuration=$(Configuration)" Targets="Rebuild"/> 
 	</Target>
 	
 	<Target Name="Package" DependsOnTargets="Rebuild;GetVersion">
 		<PropertyGroup>
-			<NuGetCmd>nuget.exe pack -Version "$(Version)" -OutputDirectory ..\artifacts NServiceMVC.nuspec</NuGetCmd>
+			<NuGetCmd>nuget.exe pack -Version "$(Version)" -OutputDirectory ..\artifacts nuget.NServiceMVC\NServiceMVC.nuspec</NuGetCmd>
 		</PropertyGroup>
+		
+		<ItemGroup>
+			<LibFiles Remove="@(LibFiles)" /> <!-- clean existing items -->
+			<LibFiles Include="..\src\NServiceMVC\bin\$(Configuration)\NServiceMVC.*" />
+			<LibFiles Include="..\src\NServiceMVC\bin\$(Configuration)\DotLiquid.*" />
+		</ItemGroup>
+		<MakeDir Directories="nuget.NServiceMVC\lib" />
+		<Copy SourceFiles="@(LibFiles)" DestinationFolder="nuget.NServiceMVC\lib\" />
+		
 		
 		<MakeDir Directories="..\artifacts" />
 		
