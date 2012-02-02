@@ -7,5 +7,6 @@ _ReSharper.*
 *.user
 *.suo
 *.cache
-nuget/*.nupkg
+artifacts/*.nupkg
 App_Data/
+build/nuget.*/lib/*
