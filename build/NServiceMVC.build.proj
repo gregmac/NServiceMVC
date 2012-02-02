@@ -37,6 +37,8 @@
 			<NuGetCmd>nuget.exe pack -Version "$(Version)" -OutputDirectory ..\artifacts NServiceMVC.nuspec</NuGetCmd>
 		</PropertyGroup>
 		
+		<MakeDir Directories="..\artifacts" />
+		
 		<Message text="Executing: $(NuGetCmd)" />
 		<Exec Command="$(NuGetCmd)" />
 	</Target>
