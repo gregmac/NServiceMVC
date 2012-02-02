@@ -1,4 +1,4 @@
-<Project ToolsVersion="3.5" DefaultTargets="Package" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="3.5" DefaultTargets="Clean;Package" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
 		<ExtensionTasksPath>.\</ExtensionTasksPath>
 
@@ -23,6 +23,11 @@
 
 	<!-- removes all files not in SVN, reverts all changes in working dir. -->
 	<Target Name="Clean">
+		<ItemGroup>
+			<DeleteFiles Include="nuget.NServiceMVC\lib\**\*.*;..\artifacts\**\*.*" />
+		</ItemGroup>
+		<Delete Files="@(DeleteFiles)" />
+		
 		<MSBuild Projects="../src/NServiceMVC.sln" Properties="Configuration=$(Configuration)" Targets="Clean"/>
 	</Target>
 
