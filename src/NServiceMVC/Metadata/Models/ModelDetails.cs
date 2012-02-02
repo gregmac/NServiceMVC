@@ -22,6 +22,8 @@ namespace NServiceMVC.Metadata.Models
         public bool HasMetadata { get; set; }
 
         public string SampleJson { get; set; }
+
+        public string SampleCSharp { get; set; }
     }
 
     public class ModelDetailCollection : System.Collections.ObjectModel.KeyedCollection<string, ModelDetail>
