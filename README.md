@@ -14,6 +14,8 @@ Features
  * Attributes are used to configure paths (currently the metadata provider requires this, but the actual API will actually work without attributes, using standard MVC3 routing)
  * Lightweight. The framework gives you just enough to build a REST service; DI containers, authentication, security, caching, logging, etc are up to you to decide and use what you need (or are already using). There are many solutions to all of these problems in the MVC world aleady, so this framework just builds on top.
 
+
+
 Show me the code! 
 -----------------
 
@@ -116,6 +118,8 @@ Just to acknowledge some of the major sources of code used to get started:
  * [AttributeRouting](https://github.com/mccalltd/AttributeRouting) for ability to specify HTTP verbs and URLs using atributes
  * [ServiceStack](http://www.servicestack.net) for the XHTML versions of model output
  * [WebActivator](https://bitbucket.org/davidebbo/webactivator) used for startup code
+
+Special thanks to [JetBrains](http://www.jetbrains.com/) for providing a [TeamCity Continuous Integration server](http://www.jetbrains.com/teamcity) via [CodeBetter.com](http://codebetter.com/). The builds are available [here](http://teamcity.codebetter.com/project.html?projectId=project182).
  
 Future Direction
 ----------------
