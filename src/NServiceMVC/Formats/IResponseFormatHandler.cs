@@ -39,5 +39,9 @@ namespace NServiceMVC.Formats
         /// Returns true if the specified response format is supported
         /// </summary>
         ActionResult TryCreateActionResult(string viewName, object model, ContentType responseFormat, CharsetList acceptCharsetList);
+
+        string FriendlyName { get; }
+
+        
     }
 }

@@ -39,5 +39,7 @@ namespace NServiceMVC.Formats
         /// Return true if the request content can be desrialized
         /// </summary>
         bool TryDeserializeRequestRepresentation(ControllerContext controllerContext, ModelBindingContext bindingContext, ContentType requestContentType, out object model);
+
+        string FriendlyName { get; }
     }
 }

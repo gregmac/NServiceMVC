@@ -54,7 +54,7 @@ namespace NServiceMVC.WebStack
 
         private void TryBindModel(ControllerContext controllerContext, ModelBindingContext bindingContext, out object model)
         {
-            if (!FormatManager.Current.TryDeserializeRequestRepresentation(controllerContext, bindingContext, out model))
+            if (!NServiceMVC.FormatManager.TryDeserializeRequestRepresentation(controllerContext, bindingContext, out model))
             {
                 // If the data was not handled by any of the format handlers, try the default binder
                 model = _inner.BindModel(controllerContext, bindingContext);

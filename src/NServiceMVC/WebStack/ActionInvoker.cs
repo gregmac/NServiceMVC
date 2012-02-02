@@ -41,7 +41,7 @@ namespace NServiceMVC.WebStack
             // a response handler that supports one of the accept types.
             foreach (var contentTypeWrapper in GetAcceptHeaderContentTypes(Controller.RequestInfo.AcceptTypes))
             {
-                replacementResult = FormatManager.Current.TryCreateActionResult(ViewName, actionReturnValue, contentTypeWrapper.ContentType, charsetList);
+                replacementResult = NServiceMVC.FormatManager.TryCreateActionResult(ViewName, actionReturnValue, contentTypeWrapper.ContentType, charsetList);
 
                 if (replacementResult != null)
                 {

@@ -27,7 +27,7 @@ namespace NServiceMVC
             {
                 Defaults = new RouteValueDictionary(new { controller = "NServiceMvcContent", action = "File" })
             });
-            
+
 
             Configuration = new NsConfiguration(Assembly.GetCallingAssembly());
             // register the assembly that called this one
@@ -35,6 +35,8 @@ namespace NServiceMVC
 
             if (config != null) config.Invoke(Configuration);
 
+
+            FormatManager = new Formats.FormatManager();
         }
 
         #region URLs
@@ -71,7 +73,13 @@ namespace NServiceMVC
 
         #endregion
 
+
+
         public static NsConfiguration Configuration { get; private set; }
+
+        public static Formats.FormatManager FormatManager { get; private set; }
+
+
 
         /// <summary>
         /// NServiceMVC configuration
@@ -82,7 +90,12 @@ namespace NServiceMVC
             {
                 ControllerAssemblies = new List<System.Reflection.Assembly>();
                 ModelAssemblies = new List<ModelAssembly>();
+
                 ApplicationTitle = callingAssembly.GetName().Name;
+
+                AllowJson = true;
+                AllowXhtml = true;
+                AllowXml = true;
             }
 
 
@@ -120,7 +133,7 @@ namespace NServiceMVC
             /// will be included in metadata information.
             /// </summary>
             public List<ModelAssembly> ModelAssemblies { get; private set; }
-            
+
             /// <summary>
             /// Registers all types in the givven assembly as models
             /// </summary>
@@ -129,7 +142,7 @@ namespace NServiceMVC
             {
                 RegisterModelAssembly(assembly, null);
             }
-            
+
             /// <summary>
             /// Reegisters all types in the given assembly with the specified namespace as models to
             /// be included in metadata output.
@@ -156,18 +169,30 @@ namespace NServiceMVC
             /// <param name="baseUrl"></param>
             public void Metadata(string baseUrl = "metadata")
             {
-                MetadataUrl = baseUrl.TrimEnd('/').TrimStart(new char[] {'~','/'});
+                MetadataUrl = baseUrl.TrimEnd('/').TrimStart(new char[] { '~', '/' });
 
-                RouteTable.Routes.Add(new System.Web.Routing.Route(MetadataUrl, new MvcRouteHandler()) {
+                RouteTable.Routes.Add(new System.Web.Routing.Route(MetadataUrl, new MvcRouteHandler())
+                {
                     Defaults = new RouteValueDictionary(new { controller = "metadata", action = "Index" })
                 });
-                   
-                RouteTable.Routes.Add(new System.Web.Routing.Route(MetadataUrl + "/{action}/{*id}", new MvcRouteHandler()) {
+
+                RouteTable.Routes.Add(new System.Web.Routing.Route(MetadataUrl + "/{action}/{*id}", new MvcRouteHandler())
+                {
                     Defaults = new RouteValueDictionary(new { controller = "metadata" })
                 });
-                    
+
             }
             #endregion
+
+
+            public bool AllowJson { get; set; }
+            public bool AllowXml { get; set; }
+            public bool AllowXhtml { get; set; }
+
+            /// <summary>
+            /// If JSON is converted to camelCase (otherwise left as-is)
+            /// </summary>
+            public bool JsonCamelCase { get; set; }
 
         }
     }

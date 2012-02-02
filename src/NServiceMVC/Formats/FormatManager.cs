@@ -27,6 +27,7 @@ using System.Net.Mime;
 using System.Web.Mvc;
 using System.Web;
 using System.Net;
+using System.Linq;
 using NServiceMVC.Formats.Xml;
 using NServiceMVC.Formats.Json;
 using NServiceMVC.Formats.Xhtml;
@@ -39,27 +40,39 @@ namespace NServiceMVC.Formats
     /// </summary>
     public class FormatManager
     {
-        static FormatManager _current = new DefaultFormatManager();
-
-        readonly Collection<IRequestFormatHandler> _requestHandlers = new Collection<IRequestFormatHandler>();
-        readonly Collection<IResponseFormatHandler> _responseHandlers = new Collection<IResponseFormatHandler>();
-
-        public static FormatManager Current
+        public FormatManager() 
         {
-            get { return _current; }
-            set
-            {
-                if (value == null)
-                {
-                    throw new ArgumentNullException("value");
-                }
+            RequestFormatHandlers = new RequestFormatHandlerCollection();
+            ResponseFormatHandlers = new ResponseFormatHandlerCollection();
 
-                _current = value;
+            if (NServiceMVC.Configuration.AllowJson) 
+            {
+                var xhtmlFormatHandler = new XhtmlFormatHandler { IgnoreMissingXslt = true };
+                RequestFormatHandlers.Add(xhtmlFormatHandler);
+                ResponseFormatHandlers.Add(xhtmlFormatHandler);
+            }
+
+            if (NServiceMVC.Configuration.AllowXml)
+            {
+                var xmlHandler = new XmlFormatHandler { IgnoreMissingXslt = true };
+                RequestFormatHandlers.Add(xmlHandler);
+                ResponseFormatHandlers.Add(xmlHandler);
+            }
+
+            if (NServiceMVC.Configuration.AllowJson)
+            {
+                var jsonHandler = new JsonNetFormatHandler();
+                jsonHandler.JsonSerializerSettings = JsonNetSerializerSettings.CreateResponseSettings();
+                jsonHandler.Formatting = Newtonsoft.Json.Formatting.None;
+
+                RequestFormatHandlers.Add(jsonHandler);
+                ResponseFormatHandlers.Add(jsonHandler);
             }
         }
 
-        public Collection<IRequestFormatHandler> RequestFormatHandlers { get { return _requestHandlers; } }
-        public Collection<IResponseFormatHandler> ResponseFormatHandlers { get { return _responseHandlers; } }
+
+        public RequestFormatHandlerCollection RequestFormatHandlers { get; private set; }
+        public ResponseFormatHandlerCollection ResponseFormatHandlers { get; private set; }
 
         /// <summary>
         /// Asks each registered Format Handler (Response handlers followed by Request handlers) 
@@ -177,18 +190,39 @@ namespace NServiceMVC.Formats
         /// </summary>
         private class DefaultFormatManager : FormatManager
         {
-            public DefaultFormatManager()
+            
+        }
+
+
+        public class RequestFormatHandlerCollection : System.Collections.ObjectModel.KeyedCollection<string, IRequestFormatHandler>
+        {
+            public RequestFormatHandlerCollection() : base() { }
+            //public RequestFormatHandlerCollection(System.Collections.Generic.IEnumerable<IResponseFormatter> list)
+            //    : base()
+            //{
+            //    if (list != null) foreach (var item in list) Add(item);
+            //}
+
+            protected override string GetKeyForItem(IRequestFormatHandler item)
             {
-                var xhtmlFormatHandler = new XhtmlFormatHandler { IgnoreMissingXslt = true };
-                var xmlHandler = new XmlFormatHandler { IgnoreMissingXslt = true };
-                var jsonHandler = new JsonNetFormatHandler();
-                RequestFormatHandlers.Add(xhtmlFormatHandler);
-                RequestFormatHandlers.Add(xmlHandler);
-                RequestFormatHandlers.Add(jsonHandler);
-                ResponseFormatHandlers.Add(xhtmlFormatHandler);
-                ResponseFormatHandlers.Add(xmlHandler);
-                ResponseFormatHandlers.Add(jsonHandler);
+                return item.FriendlyName;
             }
         }
+
+        public class ResponseFormatHandlerCollection : System.Collections.ObjectModel.KeyedCollection<string, IResponseFormatHandler>
+        {
+            public ResponseFormatHandlerCollection() : base() { }
+            //public RequestFormatHandlerCollection(System.Collections.Generic.IEnumerable<IResponseFormatter> list)
+            //    : base()
+            //{
+            //    if (list != null) foreach (var item in list) Add(item);
+            //}
+
+            protected override string GetKeyForItem(IResponseFormatHandler item)
+            {
+                return item.FriendlyName;
+            }
+        }
+
     }
 }

@@ -31,7 +31,7 @@ namespace NServiceMVC.Formats.Xml
     public class XmlFormatHandler : IRequestFormatHandler, IResponseFormatHandler
     {
         public bool IgnoreMissingXslt { get; set; }
-        public static string FriendlyName { get { return "Xml"; } }
+        public string FriendlyName { get { return "Xml"; } }
 
         private static bool IsCompatibleMediaType(string mediaType)
         {

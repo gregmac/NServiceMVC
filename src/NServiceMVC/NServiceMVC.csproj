@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AttributeRouting.cs" />
+    <Compile Include="Formats\Json\JsonNetSerializerSettings.cs" />
     <Compile Include="Metadata\MetadataController.cs" />
     <Compile Include="Metadata\Models\MetadataSummary.cs" />
     <Compile Include="Metadata\Models\ModelDetails.cs" />

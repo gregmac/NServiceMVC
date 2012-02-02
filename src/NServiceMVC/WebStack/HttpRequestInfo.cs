@@ -213,7 +213,7 @@ namespace NServiceMVC.WebStack
                 {
                     // This may be a friendly name (for example, "xml" instead of "text/xml").
                     // if so, try mapping to a content type
-                    if (FormatManager.Current.TryToMapFormatFriendlyName(contentFormatFromQueryString, out contentType))
+                    if (NServiceMVC.FormatManager.TryToMapFormatFriendlyName(contentFormatFromQueryString, out contentType))
                     {
                         return true;
                     }

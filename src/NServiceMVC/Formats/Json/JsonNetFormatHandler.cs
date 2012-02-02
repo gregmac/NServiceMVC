@@ -110,5 +110,14 @@ namespace NServiceMVC.Formats.Json
 
             return result;
         }
+
+        public static string SerializeHumanReadable(object model)
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(
+                model, 
+                Newtonsoft.Json.Formatting.Indented, 
+                JsonNetSerializerSettings.CreateHumanReadableSettings()
+            );
+        }
     }
 }

@@ -176,9 +176,11 @@ namespace NServiceMVC.Metadata
 
             object modelSample = Utilities.DefaultValueGenerator.GetDefaultValue(type);
 
-            detail.SampleJson = Newtonsoft.Json.JsonConvert.SerializeObject(modelSample);
+            detail.SampleJson = Formats.Json.JsonNetFormatHandler.SerializeHumanReadable(modelSample);
 
             return detail;
         }
+
+
     }
 }

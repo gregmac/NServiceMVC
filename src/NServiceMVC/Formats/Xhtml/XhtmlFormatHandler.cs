@@ -31,7 +31,7 @@ namespace NServiceMVC.Formats.Xhtml
     public class XhtmlFormatHandler : IRequestFormatHandler, IResponseFormatHandler
     {
         public bool IgnoreMissingXslt { get; set; }
-        public static string FriendlyName { get { return "Xhtml"; } }
+        public string FriendlyName { get { return "Xhtml"; } }
         public static string FriendlyNameHelp { get { return "Help"; } }
 
         protected virtual bool IsCompatibleMediaType(string mediaType)
