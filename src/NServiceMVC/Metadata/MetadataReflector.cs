@@ -118,9 +118,6 @@ namespace NServiceMVC.Metadata
                 return String.Join(",", methods); // not really sure on this one..
         }
 
-
-
-
         #region GetModelTypes()
         private static ModelDetailCollection _modelTypesCache;
         public static ModelDetailCollection GetModelTypes()
@@ -176,7 +173,29 @@ namespace NServiceMVC.Metadata
 
             object modelSample = Utilities.DefaultValueGenerator.GetDefaultValue(type);
 
-            detail.SampleJson = Formats.Json.JsonNetFormatHandler.SerializeHumanReadable(modelSample);
+            if (NServiceMVC.Formatter.JSON != null)
+            {
+                try
+                {
+                    detail.SampleJson = NServiceMVC.Formatter.JSON.Serialize(modelSample, true);
+                }
+                catch (Exception ex)
+                {
+                    detail.SampleJson = "Error: " + ex.Message;
+                }
+            }
+
+            if (NServiceMVC.Formatter.XML != null)
+            {
+                try
+                {
+                    detail.SampleXml = NServiceMVC.Formatter.XML.Serialize(modelSample, true);
+                }
+                catch (Exception ex)
+                {
+                    detail.SampleXml = "Error: " + ex.Message;
+                }
+            }
 
             detail.SampleCSharp = GetCSharpCode(type);
 

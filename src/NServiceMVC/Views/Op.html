@@ -82,15 +82,26 @@
                         <span>{{Route.Method}}</span> <span>{{BaseUrl}}<input id="test-json-url" value="{{Route.Url}}" /></span>
                         <button id="test-json-go" class="btn btn-warning btn-small">{{Route.Method}}</button>
 
-                        <p>
-                        {% if (Route.Method == "POST" || Route.Method == "PUT" || Route.Method == "DELETE") %}
-                            <textarea id="test-json-body" cols="80" rows="10">{{Route.ModelType.SampleJson}}</textarea>
-                        {% endif %}
-                        </p>
+                        <div class="control-group" id="test-json-body-control">
+                            {% if (Route.Method == "POST" || Route.Method == "PUT" || Route.Method == "DELETE") %}
+                                <textarea id="test-json-body" cols="80" rows="10">{{Route.ModelType.SampleJson}}</textarea>
+                            {% endif %}
+                            <span class="help-inline"></span>
+                        </div>
                     </form>
                 </div>
                 <div class="tab-pane" id="test-xml">
-                TODO: Make XML test
+                    <form class="form-inline">
+                        <span>{{Route.Method}}</span> <span>{{BaseUrl}}<input id="test-xml-url" value="{{Route.Url}}" /></span>
+                        <button id="test-xml-go" class="btn btn-warning btn-small">{{Route.Method}}</button>
+
+                        <div class="control-group" id="test-json-xml-control">
+                            {% if (Route.Method == "POST" || Route.Method == "PUT" || Route.Method == "DELETE") %}
+                                <textarea id="test-xml-body" cols="80" rows="10">{{Route.ModelType.SampleXml}}</textarea>
+                            {% endif %}
+                            <span class="help-inline"></span>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -114,38 +125,56 @@
 <script type="text/javascript">
     $(function () {
         $("#test-json-go").click(function () {
-            var url = '{{BaseUrl}}' + $("#test-json-url").val();
-            console.log("Going to ", url);
+            runTest('json');
+            return false;
+        });
+        $("#test-xml-go").click(function () {
+            runTest('xml');
+            return false;
+        });
 
-            var postdata = $('#test-json-body').val();
+        function runTest(format) {
+            var url = '{{BaseUrl}}' + $('#test-'+format+'-url').val();
+            console.log('Going to:', url, 'format:', format);
+
+            var postdata = $('#test-'+format+'-body').val();
             if (postdata) {
-                postdata = $.parseJSON(postdata);
-                // TODO: if failed, show error
+//                try {
+//                    postdata = $.parseJSON(postdata);
+//                } catch {
+//                    $('#test-json-body-control').addClass('error');
+//                    $('#test-json-body-control span.help-inline').text('Invalid input JSON');
+//                    return false;
+//                }
+//                
+//                $('#test-json-body-control span.help-inline').text();
+//                $('#test-json-body-control').removeClass('error');
+
                 console.log('postdata', postdata);
             }
 
             $.ajax(url, {
                 type: '{{Route.Method}}',
-                dataType: 'json',
+                dataType: format,
                 data: postdata,
                 success: function (data, textStatus, jqXHR) {
                     var head = jqXHR.getAllResponseHeaders();
-                    $('#test-response-headers-code').text(head);
+                    $('#test-response-headers-code').text(textStatus + "\n" + head);
                     $('#test-response-body-code').text(jqXHR.responseText);
                     $('#test-response-body-tab').tab('show');
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    $('#test-response-headers-code').text(jqXHR.getAllResponseHeaders());
+                    var head = jqXHR.getAllResponseHeaders();
+                    $('#test-response-headers-code').text(textStatus + "\n" + head);
                     $('#test-response-body-code').text(jqXHR.responseText);
                     $('#test-response-headers-tab').tab('show');
                 },
-                beforeSed: function (jqXHR, settings) {
+                beforeSend: function (jqXHR, settings) {
                     console.log('beforeSend', jqXHR, settings);
                 },
                 cache: false
             });
-            return false;
-        });
+        }
 
     });
 </script>

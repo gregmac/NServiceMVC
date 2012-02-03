@@ -25,7 +25,6 @@ using System;
 using System.Net;
 using System.Net.Mime;
 using System.Web;
-using NServiceMVC.Formats;
 
 namespace NServiceMVC.WebStack
 {
@@ -38,7 +37,7 @@ namespace NServiceMVC.WebStack
         public const string XHttpMethodOverrideHeader = "X-Http-Method-Override";
         public static string HttpMethodOverrideFormId = XHttpMethodOverrideHeader;
         public static string HttpMethodOverrideQueryStringId = XHttpMethodOverrideHeader;
-        public static string ContentTypeQueryStringId = "format";
+        public static string ContentTypeQueryStringId = "format"; // TODO: Extract to NServiceMVC.Configuration
 
         // ContentType defaults to "application/octet-stream" per RFC 2616 7.2.1
         public static string DefaultContentType = new ContentType().ToString();
@@ -199,25 +198,20 @@ namespace NServiceMVC.WebStack
             return new ContentType();
         }
 
+        /// <summary>
+        /// Gets the content type value from a URL parameter, if posssible.
+        /// No validity checking is done on the value passed.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="contentType"></param>
+        /// <returns></returns>
         private static bool TryToGetContentTypeFromUri(HttpRequestBase request, out string contentType)
         {
             string contentFormatFromQueryString = request.QueryString[ContentTypeQueryStringId];
             if (!string.IsNullOrEmpty(contentFormatFromQueryString))
             {
-                try
-                {
-                    contentType = (new ContentType(contentFormatFromQueryString)).ToString();
-                    return true;
-                }
-                catch (FormatException)
-                {
-                    // This may be a friendly name (for example, "xml" instead of "text/xml").
-                    // if so, try mapping to a content type
-                    if (NServiceMVC.FormatManager.TryToMapFormatFriendlyName(contentFormatFromQueryString, out contentType))
-                    {
-                        return true;
-                    }
-                }
+                contentType = contentFormatFromQueryString;
+                return true;
             }
 
             contentType = null;

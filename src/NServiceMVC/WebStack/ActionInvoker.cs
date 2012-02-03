@@ -17,12 +17,11 @@ namespace NServiceMVC.WebStack
             : base()
         {
             this.Controller = controller;
-            this.ViewName = "GenericObject";
         }
 
         protected ServiceController Controller { get; set; }
 
-        public string ViewName { get; set; }
+       // public string ViewName { get; set; }
 
         //public static Func<object, ActionResult> DefaultViewFunction { get; set; }
 
@@ -30,10 +29,10 @@ namespace NServiceMVC.WebStack
         {
             // bulk of this from ResourcesOverMvc.Web.Mvc.MultipleRepresentationsAttribute.OnActionExecuted()
 
-            // Create a list of the charsets the client is willing to support in order of preference
-            // (adding the encoding the client used in the request as the last alternative)
-            var charsetList = new CharsetList(controllerContext.HttpContext.Request.Headers["Accept-Charset"])
-                                    {new Charset(controllerContext.HttpContext.Request.ContentEncoding, 0.0001F)};
+            //// Create a list of the charsets the client is willing to support in order of preference
+            //// (adding the encoding the client used in the request as the last alternative)
+            //var charsetList = new CharsetList(controllerContext.HttpContext.Request.Headers["Accept-Charset"])
+            //                        {new Charset(controllerContext.HttpContext.Request.ContentEncoding, 0.0001F)};
             
             ActionResult replacementResult = null;
 
@@ -41,7 +40,7 @@ namespace NServiceMVC.WebStack
             // a response handler that supports one of the accept types.
             foreach (var contentTypeWrapper in GetAcceptHeaderContentTypes(Controller.RequestInfo.AcceptTypes))
             {
-                replacementResult = NServiceMVC.FormatManager.TryCreateActionResult(ViewName, actionReturnValue, contentTypeWrapper.ContentType, charsetList);
+                //replacementResult = NServiceMVC.Formatter.TryCreateActionResult(ViewName, actionReturnValue, contentTypeWrapper.ContentType, charsetList);
 
                 if (replacementResult != null)
                 {

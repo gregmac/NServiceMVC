@@ -36,7 +36,7 @@ namespace NServiceMVC
             if (config != null) config.Invoke(Configuration);
 
 
-            FormatManager = new Formats.FormatManager();
+            Formatter = new Formats.FormatManager();
         }
 
         #region URLs
@@ -77,7 +77,7 @@ namespace NServiceMVC
 
         public static NsConfiguration Configuration { get; private set; }
 
-        public static Formats.FormatManager FormatManager { get; private set; }
+        public static Formats.FormatManager Formatter { get; private set; }
 
 
 

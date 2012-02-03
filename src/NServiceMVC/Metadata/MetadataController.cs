@@ -69,7 +69,7 @@ namespace NServiceMVC.Metadata
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public ActionResult XhtmlObject(object model)
+        public string XhtmlHelpPage(object model)
         {
             var type = model.GetType();
             var metadata = (from t in MetadataReflector.GetModelTypes()
@@ -79,14 +79,14 @@ namespace NServiceMVC.Metadata
             return Layout("XhtmlObject.html",
                 new
                 {
-                    ObjectJson = Newtonsoft.Json.JsonConvert.SerializeObject(model),
+                    ObjectJson = NServiceMVC.Formatter.JSON.Serialize(model),
                     Metadata = metadata,
                     ModelType = (metadata != null) ? metadata.Name : type.FullName,
                     BaseUrl = NServiceMVC.GetBaseUrl(),
                     MetadataUrl = NServiceMVC.GetMetadataUrl(),
                     ContentUrl = NServiceMVC.GetContentUrl(),
                 }
-            );
+            ).Content;
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace NServiceMVC.Metadata
         /// <param name="innerView"></param>
         /// <param name="innerModel"></param>
         /// <returns></returns>
-        private ActionResult Layout(string innerView, object innerModel) {
+        private ContentResult Layout(string innerView, object innerModel) {
             return WebStack.TemplateEngine.RenderView("Metadata_Layout.html",
                     new
                     {

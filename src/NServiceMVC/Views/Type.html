@@ -20,13 +20,13 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="objectmodel-json">
-                    <pre>{{Model.SampleJson}}</pre>
+                    <pre>{{Model.SampleJson | Escape}}</pre>
                 </div>
                 <div class="tab-pane" id="objectmodel-xml">
-                    <p><em>Not yet implemented</em></p>
+                    <pre>{{Model.SampleXml | Escape}}</pre>
                 </div>
                 <div class="tab-pane" id="objectmodel-csharp">
-                    <pre>{{Model.SampleCSharp}}</pre>
+                    <pre>{{Model.SampleCSharp | Escape}}</pre>
                 </div>
             </div>
 

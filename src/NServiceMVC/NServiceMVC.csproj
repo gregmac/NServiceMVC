@@ -59,7 +59,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AttributeRouting.cs" />
-    <Compile Include="Formats\Json\JsonNetSerializerSettings.cs" />
+    <Compile Include="Formats\FormatManager.cs" />
+    <Compile Include="Formats\IResponseFormatter.cs" />
+    <Compile Include="Formats\JsonFormatHandler.cs" />
+    <Compile Include="Formats\XmlFormatHandler.cs" />
     <Compile Include="Metadata\MetadataController.cs" />
     <Compile Include="Metadata\Models\MetadataSummary.cs" />
     <Compile Include="Metadata\Models\ModelDetails.cs" />
@@ -68,22 +71,6 @@
     <Compile Include="Utilities\DefaultValueGenerator.cs" />
     <Compile Include="Metadata\MetadataReflector.cs" />
     <Compile Include="WebStack\ActionInvoker.cs" />
-    <Compile Include="Formats\Charset.cs" />
-    <Compile Include="Formats\CharsetList.cs" />
-    <Compile Include="Formats\FormatManager.cs" />
-    <Compile Include="Formats\IRequestFormatHandler.cs" />
-    <Compile Include="Formats\IResponseFormatHandler.cs" />
-    <Compile Include="Formats\Json\JsonNetActionResult.cs" />
-    <Compile Include="Formats\Json\JsonNetFormatHandler.cs" />
-    <Compile Include="Formats\Xhtml\XhtmlFormatHandler.cs" />
-    <Compile Include="Formats\Xml\Utilities\Xml.cs" />
-    <Compile Include="Formats\Xml\Utilities\XmlPreloadedResolver.cs" />
-    <Compile Include="Formats\Xml\Utilities\Xslt.cs" />
-    <Compile Include="Formats\Xml\VirtualPathProviderXsltEngine.cs" />
-    <Compile Include="Formats\Xml\XmlActionResult.cs" />
-    <Compile Include="Formats\Xml\XmlFormatHandler.cs" />
-    <Compile Include="Formats\Xml\XsltEngineResult.cs" />
-    <Compile Include="Formats\Xml\XsltSerializer.cs" />
     <Compile Include="WebStack\HttpRequestInfo.cs" />
     <Compile Include="WebStack\MultipleRepresentationsBinder.cs" />
     <Compile Include="NServiceMVC.cs" />
@@ -92,7 +79,6 @@
     <Compile Include="WebStack\TemplateEngine.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Formats\Xml\Utilities\xhtml11-flat.dtd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -118,6 +104,7 @@
     <EmbeddedResource Include="Content\glyphicons-halflings.png" />
     <EmbeddedResource Include="Content\jquery-1.7.1.min.js" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

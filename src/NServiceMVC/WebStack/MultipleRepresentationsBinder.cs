@@ -25,7 +25,6 @@ using System.Net;
 using System.Web.Mvc;
 using System.Web;
 using System;
-using NServiceMVC.Formats;
 
 namespace NServiceMVC.WebStack
 {
@@ -44,21 +43,36 @@ namespace NServiceMVC.WebStack
             // Only bind values that have not been extracted from the URI if the request actually has a body to deserialize
             if (!controllerContext.RouteData.Values.ContainsKey(bindingContext.ModelName) && RequestHasBody(controllerContext.HttpContext.Request))
             {
+                // bindingContext.modelType contains what MVC figured out as the model type
+
+                string representation = ReadInputStream(controllerContext.HttpContext);
+
                 object model = null;
-                TryBindModel(controllerContext, bindingContext, out model);
-                return model;
+                if (NServiceMVC.Formatter.TryDeserializeModel(representation, bindingContext.ModelType, out model))
+                {
+                    return model;
+                }
             }
 
             return _inner.BindModel(controllerContext, bindingContext);
         }
 
-        private void TryBindModel(ControllerContext controllerContext, ModelBindingContext bindingContext, out object model)
+        private string ReadInputStream(HttpContextBase httpContext) 
         {
-            if (!NServiceMVC.FormatManager.TryDeserializeRequestRepresentation(controllerContext, bindingContext, out model))
+            // We need to reset the position on the InputStream before we read it; due to 
+            // the MVC framework's intrinsic support for JSON, the InputStream has already been read once
+            if (httpContext.Request.InputStream.CanSeek)
             {
-                // If the data was not handled by any of the format handlers, try the default binder
-                model = _inner.BindModel(controllerContext, bindingContext);
+                httpContext.Request.InputStream.Position = 0;
             }
+
+            using (var reader = new System.IO.StreamReader(httpContext.Request.InputStream, httpContext.Request.ContentEncoding, true))
+            {
+                return reader.ReadToEnd();
+            }
+            
+
+        
         }
 
         private static bool RequestHasBody(HttpRequestBase request)

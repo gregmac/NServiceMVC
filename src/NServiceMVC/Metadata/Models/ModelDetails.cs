@@ -22,7 +22,7 @@ namespace NServiceMVC.Metadata.Models
         public bool HasMetadata { get; set; }
 
         public string SampleJson { get; set; }
-
+        public string SampleXml { get; set; }
         public string SampleCSharp { get; set; }
     }
 
