@@ -14,8 +14,8 @@
     <copyright>Copyright 2012</copyright>
     <tags>REST MVC MVC3 webservice</tags>
 	<dependencies>
-	  <dependency id="WebActivator" version="1.0.0.0" />
-	  <dependency id="AttributeRouting" version="1.3.2" />
+	  <dependency id="WebActivator" version="1.5.0.0" />
+	  <dependency id="AttributeRouting" version="1.4.0" />
 	  <dependency id="Newtonsoft.Json" version="4.0.7" />
 	  <!-- DotLiquid can be added as dependency, once https://github.com/formosatek/dotliquid/pull/51 is done
 			For now, it's included in lib	  -->
