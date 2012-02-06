@@ -41,6 +41,7 @@ namespace NServiceMVC.WebStack
             foreach (var contentTypeWrapper in GetAcceptHeaderContentTypes(Controller.RequestInfo.AcceptTypes))
             {
                 //replacementResult = NServiceMVC.Formatter.TryCreateActionResult(ViewName, actionReturnValue, contentTypeWrapper.ContentType, charsetList);
+                replacementResult = NServiceMVC.Formatter.CreateHttpResponse(contentTypeWrapper.ContentType.ToString(), actionReturnValue);
 
                 if (replacementResult != null)
                 {
