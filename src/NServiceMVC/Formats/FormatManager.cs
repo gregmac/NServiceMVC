@@ -128,8 +128,11 @@ namespace NServiceMVC.Formats
         /// </summary>
         /// <param name="alias"></param>
         /// <returns></returns>
-        public string GetContentTypeFromAlias(string alias)
+        public static string GetContentTypeFromAlias(string alias)
         {
+            if (string.IsNullOrEmpty(alias)) 
+                return "text/html";
+
             switch (alias.ToLower())
             {
                 case "json":

@@ -210,7 +210,7 @@ namespace NServiceMVC.WebStack
             string contentFormatFromQueryString = request.QueryString[ContentTypeQueryStringId];
             if (!string.IsNullOrEmpty(contentFormatFromQueryString))
             {
-                contentType = contentFormatFromQueryString;
+                contentType = Formats.FormatManager.GetContentTypeFromAlias(contentFormatFromQueryString);
                 return true;
             }
 
