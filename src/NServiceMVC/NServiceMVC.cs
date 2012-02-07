@@ -17,9 +17,6 @@ namespace NServiceMVC
         {
             ModelBinders.Binders.DefaultBinder = (new WebStack.MultipleRepresentationsBinder());
 
-            // Register the virtual path  (razor views -- to be deleted I guess?)
-            //System.Web.Hosting.HostingEnvironment.RegisterVirtualPathProvider(new WebStack.NsVirtualPathProvider());
-
             WebStack.TemplateEngine.Initialize();
 
             // register our content handler

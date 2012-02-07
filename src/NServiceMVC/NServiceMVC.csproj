@@ -73,7 +73,7 @@
     <Compile Include="Metadata\Models\MetadataSummary.cs" />
     <Compile Include="Metadata\Models\ModelDetails.cs" />
     <Compile Include="Metadata\Models\RouteDetails.cs" />
-    <Compile Include="NServiceMvcContentController.cs" />
+    <Compile Include="WebStack\NServiceMvcContentController.cs" />
     <Compile Include="Utilities\DefaultValueGenerator.cs" />
     <Compile Include="Metadata\MetadataReflector.cs" />
     <Compile Include="WebStack\ActionInvoker.cs" />

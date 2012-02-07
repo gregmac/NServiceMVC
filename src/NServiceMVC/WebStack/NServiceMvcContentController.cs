@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 
-namespace NServiceMVC
+namespace NServiceMVC.WebStack
 {
     /// <summary>
     /// Controller that services NServiceMVC static content at ~/__NServiceMvcContent/
