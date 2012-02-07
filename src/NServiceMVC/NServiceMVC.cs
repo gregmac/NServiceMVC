@@ -194,6 +194,25 @@ namespace NServiceMVC
             /// </summary>
             public bool JsonCamelCase { get; set; }
 
+            public JsonDateFormatType JsonDateFormat { get; set; }
+
+
+            public enum JsonDateFormatType
+            {
+                /// <summary>
+                /// Returns a time like "20120102T204255"
+                /// </summary>
+                IsoTime,
+                /// <summary>
+                /// Returns a time the same format as Microsoft's implementation, namely, "\/Date(1258282785)\/"
+                /// </summary>
+                JsonDateConstructor,
+                //UnixTimestamp,
+                
+            }
+
+
         }
+
     }
 }

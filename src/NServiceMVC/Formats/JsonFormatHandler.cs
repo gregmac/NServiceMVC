@@ -5,6 +5,9 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Utilities;
+using System.Globalization;
+
 
 namespace NServiceMVC.Formats
 {
@@ -18,10 +21,6 @@ namespace NServiceMVC.Formats
                 NullValueHandling = NullValueHandling.Ignore,
                 ContractResolver = NServiceMVC.Configuration.JsonCamelCase ? new CamelCasePropertyNamesContractResolver() : new DefaultContractResolver(),
             };
-            NormalSettings.Converters.Add(new IsoDateTimeConverter());
-            NormalSettings.Converters.Add(new StringEnumConverter());
-
-
 
             HumanSettings = new JsonSerializerSettings
             {
@@ -29,9 +28,19 @@ namespace NServiceMVC.Formats
                 NullValueHandling = NullValueHandling.Include,
                 ContractResolver = NServiceMVC.Configuration.JsonCamelCase ? new CamelCasePropertyNamesContractResolver() : new DefaultContractResolver(),
             };
-            HumanSettings.Converters.Add(new IsoDateTimeConverter());
-            HumanSettings.Converters.Add(new StringEnumConverter());
 
+
+            switch (NServiceMVC.Configuration.JsonDateFormat)
+            {
+                case NServiceMVC.NsConfiguration.JsonDateFormatType.IsoTime:
+                    NormalSettings.Converters.Add(new IsoDateTimeConverter());
+                    HumanSettings.Converters.Add(new IsoDateTimeConverter());
+                    break;
+            }
+
+
+            NormalSettings.Converters.Add(new StringEnumConverter());
+            HumanSettings.Converters.Add(new StringEnumConverter());
         }
 
 
