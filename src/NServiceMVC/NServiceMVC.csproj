@@ -114,7 +114,11 @@
     <EmbeddedResource Include="Content\glyphicons-halflings.png" />
     <EmbeddedResource Include="Content\jquery-1.7.1.min.js" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Content\lang-vb.js" />
+    <EmbeddedResource Include="Content\prettify.css" />
+    <EmbeddedResource Include="Content\prettify.js" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

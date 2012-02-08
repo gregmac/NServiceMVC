@@ -112,7 +112,7 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane" id="test-response-body">
-                    <pre id="test-response-body-code"></pre>
+                    <pre id="test-response-body-code" class="prettyprint linenums"></pre>
                 </div>
                 <div class="tab-pane" id="test-response-headers">
                     <pre id="test-response-headers-code"></pre>
@@ -159,14 +159,14 @@
                 data: postdata,
                 success: function (data, textStatus, jqXHR) {
                     var head = jqXHR.getAllResponseHeaders();
-                    $('#test-response-headers-code').text(textStatus + "\n" + head);
-                    $('#test-response-body-code').text(jqXHR.responseText);
+                    $('#test-response-headers-code').html(prettyPrintOne(jqXHR.status + "\n" + head, null, true));
+                    $('#test-response-body-code').html(prettyPrintOne(htmlEscape(jqXHR.responseText), format, true));
                     $('#test-response-body-tab').tab('show');
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     var head = jqXHR.getAllResponseHeaders();
-                    $('#test-response-headers-code').text(textStatus + "\n" + head);
-                    $('#test-response-body-code').text(jqXHR.responseText);
+                    $('#test-response-headers-code').html(prettyPrintOne(jqXHR.status + "\n" + head, null, true));
+                    $('#test-response-body-code').html(prettyPrintOne(htmlEscape(jqXHR.responseText), format, true));
                     $('#test-response-headers-tab').tab('show');
                 },
                 beforeSend: function (jqXHR, settings) {
@@ -175,6 +175,16 @@
                 cache: false
             });
         }
+
+        function htmlEscape(str) {
+            return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        }
+
 
     });
 </script>

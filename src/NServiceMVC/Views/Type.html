@@ -20,16 +20,22 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="objectmodel-json">
-                    <pre>{{Model.SampleJson | Escape}}</pre>
+                    <pre class="prettyprint linenums lang-js">{{Model.SampleJson | Escape}}</pre>
                 </div>
                 <div class="tab-pane" id="objectmodel-xml">
-                    <pre>{{Model.SampleXml | Escape}}</pre>
+                    <pre class="prettyprint linenums lang-xml">{{Model.SampleXml | Escape}}</pre>
                 </div>
                 <div class="tab-pane" id="objectmodel-csharp">
-                    <pre>{{Model.SampleCSharp | Escape}}</pre>
+                    <pre class="prettyprint linenums lang-cs">{{Model.SampleCSharp | Escape}}</pre>
                 </div>
             </div>
 
         </div>
     </div>
 </section>
+
+<script type="text/javascript">
+    $(function () {
+        window.prettyPrint();
+    });
+</script>
