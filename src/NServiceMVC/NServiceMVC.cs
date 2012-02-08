@@ -25,6 +25,9 @@ namespace NServiceMVC
                 Defaults = new RouteValueDictionary(new { controller = "NServiceMvcContent", action = "File" })
             });
 
+            // add global exception handler
+            GlobalFilters.Filters.Add(new WebStack.NsExceptionFilter());
+
 
             Configuration = new NsConfiguration(Assembly.GetCallingAssembly());
             // register the assembly that called this one

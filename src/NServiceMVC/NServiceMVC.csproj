@@ -70,9 +70,12 @@
     <Compile Include="Formats\JsonFormatHandler.cs" />
     <Compile Include="Formats\XmlFormatHandler.cs" />
     <Compile Include="Metadata\MetadataController.cs" />
+    <Compile Include="Metadata\Models\ErrorDetail.cs" />
     <Compile Include="Metadata\Models\MetadataSummary.cs" />
     <Compile Include="Metadata\Models\ModelDetails.cs" />
     <Compile Include="Metadata\Models\RouteDetails.cs" />
+    <Compile Include="ServiceException.cs" />
+    <Compile Include="WebStack\HttpStatusContentResult.cs" />
     <Compile Include="WebStack\NServiceMvcContentController.cs" />
     <Compile Include="Utilities\DefaultValueGenerator.cs" />
     <Compile Include="Metadata\MetadataReflector.cs" />
@@ -82,6 +85,7 @@
     <Compile Include="NServiceMVC.cs" />
     <Compile Include="ServiceController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebStack\NsExceptionFilter.cs" />
     <Compile Include="WebStack\TemplateEngine.cs" />
   </ItemGroup>
   <ItemGroup>

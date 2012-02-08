@@ -49,55 +49,80 @@ namespace NServiceMVC.Formats
 
         #region Response handling
 
+        /// <summary>
+        /// Tries to create a content result for the model using the specified contenttype.
+        /// Returns null if it's not possible to create using the specified type.
+        /// Normally, you should use <see cref="CreateHttpResponse"/>. 
+        /// </summary>
+        /// <param name="contentType"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        internal System.Web.Mvc.ContentResult CreateContentResult(string contentType, object model)
+        {
+            switch (contentType.ToLower())
+            {
+                case "text/html":
+                case "application/xhtml+xml":
+
+                    if (NServiceMVC.Configuration.AllowXhtml)
+                    {
+                        return new System.Web.Mvc.ContentResult
+                        {
+                            Content = (new Metadata.MetadataController()).XhtmlHelpPage(model),
+                            ContentType = contentType,
+                        };
+                    }
+                    break;
+
+                case "application/json":
+                case "application/x-javascript":
+                case "text/javascript":
+                case "text/x-javascript":
+                case "text/x-json":
+                case "text/json":
+                    if (JSON != null)
+                    {
+                        return new System.Web.Mvc.ContentResult
+                        {
+                            Content = JSON.Serialize(model),
+                            ContentType = contentType,
+                        };
+                    }
+                    break;
+
+                case "application/xml":
+                case "text/xml":
+                    if (XML != null)
+                    {
+                        return new System.Web.Mvc.ContentResult
+                        {
+                            Content = XML.Serialize(model),
+                            ContentType = contentType,
+                        };
+                    }
+                    break;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Creates an ActionResult for the model using the specified contenttype.
+        /// May return an internal server error if there is a problem encoding,
+        /// and may return HTTP not acceptable if the content type is unknown.
+        /// </summary>
+        /// <param name="contentType"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public System.Web.Mvc.ActionResult CreateHttpResponse(string contentType, object model)
         {
             contentType = GetContentTypeFromAlias(contentType);
 
             try
             {
-
-                switch (contentType.ToLower())
+                var response = CreateContentResult(contentType, model);
+                if (response != null)
                 {
-                    case "text/html":
-                    case "application/xhtml+xml":
-
-                        if (NServiceMVC.Configuration.AllowXhtml)
-                        {
-                            return new System.Web.Mvc.ContentResult
-                            {
-                                Content = (new Metadata.MetadataController()).XhtmlHelpPage(model),
-                                ContentType = contentType,
-                            };
-                        }
-                        break;
-
-                    case "application/json":
-                    case "application/x-javascript":
-                    case "text/javascript":
-                    case "text/x-javascript":
-                    case "text/x-json":
-                    case "text/json":
-                        if (JSON != null)
-                        {
-                            return new System.Web.Mvc.ContentResult
-                            {
-                                Content = JSON.Serialize(model),
-                                ContentType = contentType,
-                            };
-                        }
-                        break;
-
-                    case "application/xml":
-                    case "text/xml":
-                        if (XML != null)
-                        {
-                            return new System.Web.Mvc.ContentResult
-                            {
-                                Content = XML.Serialize(model),
-                                ContentType = contentType,
-                            };
-                        }
-                        break;
+                    return response;
                 }
             }
             catch (Exception ex)
@@ -106,6 +131,7 @@ namespace NServiceMVC.Formats
                 return new HttpServerError("Error encoding response: " + ex.Message);
             }
 
+            // could not handle this contenttype
             return new HttpNotAcceptableResult();
 
             
