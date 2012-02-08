@@ -11,7 +11,7 @@ namespace NServiceMVC.WebStack
     /// <summary>
     /// An actionresult type that is basically a combination of <see cref="System.Web.Mvc.HttpStatusCodeResult"/> and <see cref="System.Web.Mvc.ContentResult"/>
     /// </summary>
-    class HttpStatusContentResult : ActionResult
+    public class HttpStatusContentResult : ActionResult
     {
         /// <summary>
         /// Content with status 200 OK
