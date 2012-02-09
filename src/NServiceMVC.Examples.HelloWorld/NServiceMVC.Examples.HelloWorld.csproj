@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="App_Start\AttributeRouting.cs" />
     <Compile Include="App_Start\NServiceMVC.cs" />
+    <Compile Include="Controllers\ArraySampleController.cs" />
     <Compile Include="Controllers\ErrorSampleController.cs" />
     <Compile Include="Controllers\HelloController.cs" />
     <Compile Include="Global.asax.cs">
