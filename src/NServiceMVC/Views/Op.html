@@ -158,14 +158,14 @@
                 dataType: format,
                 data: postdata,
                 success: function (data, textStatus, jqXHR) {
-                    var head = jqXHR.getAllResponseHeaders();
-                    $('#test-response-headers-code').html(prettyPrintOne(jqXHR.status + "\n" + head, null, true));
+                    var head = jqXHR.getAllResponseHeaders().replace(/\n/g, '<br/>');
+                    $('#test-response-headers-code').html(prettyPrintOne('HTTP ' + jqXHR.status + ' ' + jqXHR.statusText + '<br/>' + head, null, true));
                     $('#test-response-body-code').html(prettyPrintOne(htmlEscape(jqXHR.responseText), format, true));
                     $('#test-response-body-tab').tab('show');
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    var head = jqXHR.getAllResponseHeaders();
-                    $('#test-response-headers-code').html(prettyPrintOne(jqXHR.status + "\n" + head, null, true));
+                    var head = jqXHR.getAllResponseHeaders().replace(/\n/g, '<br/>');
+                    $('#test-response-headers-code').html(prettyPrintOne('HTTP ' + jqXHR.status + ' ' + jqXHR.statusText + '<br/>' + head, null, true));
                     $('#test-response-body-code').html(prettyPrintOne(htmlEscape(jqXHR.responseText), format, true));
                     $('#test-response-headers-tab').tab('show');
                 },
