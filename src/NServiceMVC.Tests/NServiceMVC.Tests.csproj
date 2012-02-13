@@ -47,6 +47,18 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Utilities.DataTypes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1a9f1ce8fe69b437, processorArchitecture=MSIL">
+      <HintPath>..\packages\CraigsUtilityLibrary-Reflection.3.0.0013\lib\net40\Utilities.DataTypes.dll</HintPath>
+    </Reference>
+    <Reference Include="Utilities.Events, Version=1.0.0.0, Culture=neutral, PublicKeyToken=e178ba78a0ac7623, processorArchitecture=MSIL">
+      <HintPath>..\packages\CraigsUtilityLibrary-Reflection.3.0.0013\lib\net40\Utilities.Events.dll</HintPath>
+    </Reference>
+    <Reference Include="Utilities.IO">
+      <HintPath>..\packages\CraigsUtilityLibrary-Reflection.3.0.0013\lib\net40\Utilities.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="Utilities.Reflection, Version=1.0.0.0, Culture=neutral, PublicKeyToken=501e17eff79c154d, processorArchitecture=MSIL">
+      <HintPath>..\packages\CraigsUtilityLibrary-Reflection.3.0.0013\lib\net40\Utilities.Reflection.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefaultValueGeneratorTests.cs" />

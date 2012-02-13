@@ -17,68 +17,75 @@ namespace NServiceMVC.Utilities
 
         public static object GetSampleInstance(Type T)
         {
-            var sample = T.CreateInstance();
-            
-            foreach (var field in T.GetFields())
+            var sample = TrySampleBasicTypes(T); // try to create using "known" types
+            if (sample == null)
             {
-                var type = field.FieldType;
-                var value = field.GetValue(sample); // get currently assigned value 
-
-                value = FindDefaultValue(type, value);
-
-                if (value != null)
+                if (T.IsArray)
                 {
-                    field.SetValue(sample, value);
+                    var elementType = T.GetElementType();
+
+                    sample = Array.CreateInstance(elementType, 1);
+                    var instance = GetSampleInstance(elementType);
+                    ((Array)sample).SetValue(instance, 0);
                 }
-
-            }
-
-            foreach (var prop in T.GetProperties())
-            {
-                var type = prop.PropertyType;
-                var value = prop.GetValue(sample, null); // get currently assigned value 
-
-                value = FindDefaultValue(type, value);
-
-                if (value != null)
+                else if (T.IsIEnumerable())
                 {
-                    prop.SetValue(sample, value, null);
-                }
 
+                    sample = TrySampleGenericTypes(T);
+
+                }
+                else
+                {
+
+                    // create new instance of class
+                    sample = T.CreateInstance();
+
+                    foreach (var item in GetFieldsAndProperties(T))
+                    {
+                        var type = item.ActualType;
+                        var value = item.GetValue(sample); // get currently assigned value 
+
+
+                        if (value == null || (IsBasicType(type) && CheckIsDefaultValue(type, value)))
+                        { // if null or default for that value type,
+                            value = GetSampleInstance(type);
+                        }
+
+                        if (value != null)
+                        {
+                            item.SetValue(sample, value);
+                        }
+
+                    }
+                }
             }
 
             return sample;
-
-            //if (type.IsIEnumerable())
-            //{
-
-            //}
-            //else if (type.)
         }
 
-        private static object FindDefaultValue(Type type, object value)
+
+        private static bool IsBasicType(Type T)
         {
-            if (value == null || CheckIsDefaultValue(type, value))
-            { // if null or default for that value type,
-                value = TrySampleBasicTypes(type); // try to create using "known" types
-            }
-
-            if (value == null)
+            switch (T.Name)
             {
-
-                if (type.IsArray)
-                {
-                    // make new array with one memeber
-                }
-                else if (type.IsClass)
-                {
-                    // call recursive
-                    //TODO: protect from self-referential
-                    value = GetSampleInstance(type);
-                }
+                case "Int16": 
+                case "Int32": 
+                case "Int64": 
+                case "UInt16": 
+                case "UInt32": 
+                case "UInt64": 
+                case "String": 
+                case "Boolean": 
+                case "Single": 
+                case "Double": 
+                case "Char": 
+                case "DateTime": 
+                case "TimeSpan": 
+                case "Byte": 
+                case "SByte":
+                    return true;
             }
-
-            return value;
+            return false;
         }
 
         private static object TrySampleBasicTypes(Type T)
@@ -102,6 +109,88 @@ namespace NServiceMVC.Utilities
                 case "SByte": return (SByte)(-8);
             }
             return null;
+        }
+
+        private static object TrySampleGenericTypes(Type T)
+        {
+            object sample = null;
+
+            if (T.IsGenericType)
+            {
+                var containerType = T.GetGenericTypeDefinition();
+                var innerTypes = T.GetGenericArguments();
+
+                var innerSamples = new List<Object>();
+
+                foreach (var innerType in innerTypes)
+                {
+                    innerSamples.Add(GetSampleInstance(innerType));
+                }
+
+                if (T.IsInterface)
+                {
+                    // substitute a type known to implement this interface
+
+                    string newTypeName = null;
+
+                    switch (containerType.FullName)
+                    {
+                        case "System.Collections.Generic.IList`1":
+                        case "System.Collections.Generic.IEnumerable`1":
+                        case "System.Collections.Generic.ICollection`1":
+                            newTypeName = "System.Collections.Generic.List`1";
+                            break;
+                        case "System.Collections.Generic.IDictionary`2":
+                            newTypeName = "System.Collections.Generic.Dictionary`2";
+                            break;
+                    }
+                    if (newTypeName != null)
+                    {
+                        try
+                        {
+                            // thanks http://bartdesmet.net/blogs/bart/archive/2006/09/11/4410.aspx
+                            var newType = Type.GetType(newTypeName).MakeGenericType(innerTypes);
+                            sample = Activator.CreateInstance(newType);
+
+                            var addMethod = newType.GetMethod("Add", innerTypes);
+                            
+                            if (addMethod != null)
+                                addMethod.Invoke(sample, innerSamples.ToArray());
+
+                        }
+                        catch (Exception)
+                        {
+                            // ignore
+                        }
+                    }
+                }
+                else
+                {
+                    // directly create new instace
+                    sample = Activator.CreateInstance(T);
+                        
+                    try
+                    {
+                        var addMethod = T.GetMethod("Add", innerTypes);
+                        if (addMethod == null)
+                            addMethod = T.GetMethod("Enqueue", innerTypes);
+                        if (addMethod == null)
+                            addMethod = T.GetMethod("Push", innerTypes);
+                        if (addMethod == null)
+                            addMethod = T.GetMethod("AddFirst", innerTypes);
+                        
+                        if (addMethod != null)
+                            addMethod.Invoke(sample, innerSamples.ToArray());
+                    }
+                    catch (Exception)
+                    {
+                        // ignore
+                    }
+                }
+
+
+            }
+            return sample;
         }
 
         private static bool CheckIsDefaultValue(Type T, object val)
@@ -175,5 +264,52 @@ namespace NServiceMVC.Utilities
         }
 
 
+        #region GetFieldsAndProperties helper
+
+
+        public class FieldOrProperty
+        {
+            public FieldOrProperty(FieldInfo field)
+            {
+                ActualType = field.FieldType;
+                _getValueMethod = (obj) => field.GetValue(obj);
+                _setValueMethod = (obj, value) => field.SetValue(obj, value);
+            }
+
+            public FieldOrProperty(PropertyInfo prop)
+            {
+                ActualType = prop.PropertyType;
+                _getValueMethod = (obj) => prop.GetValue(obj, null);
+                _setValueMethod = (obj, value) => prop.SetValue(obj, value, null);
+            }
+
+            public Type ActualType { get; set; }
+
+            private Func<object, object> _getValueMethod;
+
+            public object GetValue(object obj)
+            {
+                return _getValueMethod.Invoke(obj);
+            }
+
+            private Action<object, object> _setValueMethod;
+
+            public void SetValue(object obj, object value)
+            {
+                _setValueMethod.Invoke(obj, value);
+            }
+        }
+
+        public static IEnumerable<FieldOrProperty> GetFieldsAndProperties(Type type)
+        {
+            return (
+                        from f in type.GetFields() select new FieldOrProperty(f)
+                   )
+                   .Union(
+                        from p in type.GetProperties() select new FieldOrProperty(p)
+                   );
+        }
+
+        #endregion
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using Utilities.Reflection.ExtensionMethods;
 
 namespace NServiceMVC.Tests
 {
@@ -11,6 +12,30 @@ namespace NServiceMVC.Tests
     {
 
         #region Basic types
+
+        [Test]
+        public void BasicTypesCreated()
+        {
+            Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(Int16)), Is.EqualTo((Int16)(-1600)));
+            Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(Int32)), Is.EqualTo((Int32)(-3200)));
+            Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(Int64)), Is.EqualTo((Int64)(-6400)));
+            Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(UInt16)), Is.EqualTo((UInt16)(1600)));
+            Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(UInt32)), Is.EqualTo((UInt32)(3200)));
+            Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(UInt64)), Is.EqualTo((UInt64)(6400)));
+            Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(String)), Is.EqualTo("sample"));
+            Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(Boolean)), Is.EqualTo((bool)true));
+            Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(Single)), Is.EqualTo((Single)100.123));
+            Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(Double)), Is.EqualTo((Double)200.123));
+            Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(Char)), Is.EqualTo((char)'x'));
+            Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(DateTime)), Is.EqualTo(new DateTime(2012, 01, 01, 00, 00, 00)));
+            Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(TimeSpan)), Is.EqualTo(TimeSpan.FromDays(1)));
+            Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(Byte)), Is.EqualTo((Byte)8));
+            Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(SByte)), Is.EqualTo((sbyte)(-8)));
+        }
+
+        #endregion
+
+        #region Object with Basic types (also checks values)
         public class TestBasicTypes
         {
             public Int16 Int16Field;
@@ -125,6 +150,9 @@ namespace NServiceMVC.Tests
             }
         }
 
+        /// <summary>
+        /// Check that types that already have a value assigned (by the cosntructor of the object) are not changed
+        /// </summary>
         [Test]
         public void BasicTypesNotReInitialized()
         {
@@ -186,7 +214,7 @@ namespace NServiceMVC.Tests
         }
 
         [Test]
-        public void BasicTypesNotReInitialized()
+        public void ComplexTypeInitialized()
         {
             var sample = Utilities.DefaultValueGenerator.GetSampleInstance(typeof(ComplexOne));
 
@@ -196,12 +224,78 @@ namespace NServiceMVC.Tests
 
             Assert.That(s.Name, Is.Not.Null.Or.Empty);
             Assert.That(s.Two, Is.TypeOf(typeof(ComplexTwo)));
+            Assert.That(s.Two.TwoVal, Is.Not.EqualTo(0)); // has some value 
+            Assert.That(s.Two.Three, Is.TypeOf(typeof(ComplexThree)));
+            Assert.That(s.Two.Three.ThirdName, Is.Not.Null.Or.Empty);
 
         }
 
         #endregion
 
         #region Arrays/enumerables
+        [Test]
+        public void BasicArrayTypesInitialized()
+        {
+            var intArray = Utilities.DefaultValueGenerator.GetSampleInstance(typeof(int[]));
+            Assert.That(intArray, Is.TypeOf<int[]>());
+            Assert.That(((int[])intArray).Length, Is.EqualTo(1));
+
+            // multi-dimensional array
+            var int3Array = Utilities.DefaultValueGenerator.GetSampleInstance(typeof(int[][][]));
+            Assert.That(int3Array, Is.TypeOf<int[][][]>());
+            Assert.That(((int[][][])int3Array).Length, Is.EqualTo(1));
+            Assert.That(((int[][][])int3Array)[0].Length, Is.EqualTo(1));
+            Assert.That(((int[][][])int3Array)[0][0].Length, Is.EqualTo(1));
+            Assert.That(((int[][][])int3Array)[0][0][0], Is.Not.EqualTo(0)); // was initialized
+        }
+
+        [Test]
+        public void CollectionTypesInitialized()
+        {
+            TestCollectionTypeInitialized<List<string>>();
+            TestCollectionTypeInitialized<Queue<string>>();
+            TestCollectionTypeInitialized<SortedSet<string>>();
+            TestCollectionTypeInitialized<LinkedList<string>>();
+            TestCollectionTypeInitialized<Stack<string>>();
+            TestCollectionTypeInitialized<Dictionary<string, int>>();
+            TestCollectionTypeInitialized<SortedDictionary<string, int>>();
+            TestCollectionTypeInitialized<SortedList<string, int>>();
+        }
+
+        private void TestCollectionTypeInitialized<T>()
+        {
+            var type = typeof(T);
+            var obj = Utilities.DefaultValueGenerator.GetSampleInstance(type);
+            Assert.That(obj, Is.TypeOf<T>());
+
+            int count = 0;
+            try
+            {
+                count = (int)type.GetProperty("Count").GetValue(obj, null);
+            }
+            catch (Exception)
+            {
+                try
+                {
+                    count = (int)type.GetProperty("Length").GetValue(obj, null);
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            Assert.That(count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void CollectionInterfaceTypes()
+        {
+            Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(IList<string>)), Is.TypeOf<List<string>>());
+            Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(ICollection<string>)), Is.TypeOf<List<string>>());
+            Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(IEnumerable<string>)), Is.TypeOf<List<string>>());
+            Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(IDictionary<string, int>)), Is.TypeOf<Dictionary<string, int>>());
+            
+        }
         #endregion
     }
 }
