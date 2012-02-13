@@ -58,6 +58,18 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Utilities.DataTypes">
+      <HintPath>..\packages\CraigsUtilityLibrary-Reflection.3.0.0013\lib\net40\Utilities.DataTypes.dll</HintPath>
+    </Reference>
+    <Reference Include="Utilities.Events">
+      <HintPath>..\packages\CraigsUtilityLibrary-Reflection.3.0.0013\lib\net40\Utilities.Events.dll</HintPath>
+    </Reference>
+    <Reference Include="Utilities.IO">
+      <HintPath>..\packages\CraigsUtilityLibrary-Reflection.3.0.0013\lib\net40\Utilities.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="Utilities.Reflection">
+      <HintPath>..\packages\CraigsUtilityLibrary-Reflection.3.0.0013\lib\net40\Utilities.Reflection.dll</HintPath>
+    </Reference>
     <Reference Include="WebActivator, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\WebActivator.1.5\lib\net40\WebActivator.dll</HintPath>

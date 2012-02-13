@@ -5,6 +5,7 @@ using System.Text;
 using NServiceMVC.Metadata.Models;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Utilities.Reflection.ExtensionMethods;
 
 
 namespace NServiceMVC.Metadata
@@ -164,15 +165,15 @@ namespace NServiceMVC.Metadata
         {
             var detail = new ModelDetail
             {
-                Name = type.FullName,
+                Name = type.GetName(),
                 HasMetadata = hasMetadata,
             };
 
             var descriptionAttr = (System.ComponentModel.DescriptionAttribute)(type.GetCustomAttributes(typeof(System.ComponentModel.DescriptionAttribute), true).FirstOrDefault());
             if (descriptionAttr != null) detail.Description = descriptionAttr.Description;
 
-            object modelSample = Utilities.DefaultValueGenerator.GetDefaultValue(type);
-
+            object modelSample = CreateSampleObject(type); 
+            
             if (NServiceMVC.Formatter.JSON != null)
             {
                 try
@@ -202,12 +203,19 @@ namespace NServiceMVC.Metadata
             return detail;
         }
 
+        private static object CreateSampleObject(System.Type type)
+        {
+            return Utilities.DefaultValueGenerator.GetDefaultValue(type);
+
+           
+        }
+
         // from http://stackoverflow.com/questions/9104642/generate-source-code-for-class-definition-given-a-system-type/9104978#9104978
         private static string GetCSharpCode(Type t)
         {
             var sb = new StringBuilder();
-            sb.AppendFormat("public class {0}\n{{\n", t.Name);
-
+            sb.AppendFormat("public class {0}\n{{\n", t.GetName());
+            
             foreach (var field in t.GetFields())
             {
                 sb.AppendFormat("    public {0} {1};\n",
