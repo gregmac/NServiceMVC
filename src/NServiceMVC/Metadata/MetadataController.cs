@@ -16,7 +16,7 @@ namespace NServiceMVC.Metadata
                     Model = new Models.MetadataSummary
                     {
                         Routes = MetadataReflector.GetRouteDetails(),
-                        Models = MetadataReflector.GetModelTypes(),
+                        Models = MetadataReflector.GetModelTypes(includeBasicTypes:false),
                     },
                     BaseUrl = NServiceMVC.GetBaseUrl(),
                     MetadataUrl = NServiceMVC.GetMetadataUrl(),

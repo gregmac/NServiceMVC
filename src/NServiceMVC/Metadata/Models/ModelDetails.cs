@@ -24,6 +24,11 @@ namespace NServiceMVC.Metadata.Models
         public string SampleJson { get; set; }
         public string SampleXml { get; set; }
         public string SampleCSharp { get; set; }
+
+        /// <summary>
+        /// If this is a basic type (eg, string, int -- part of System.* namespace)
+        /// </summary>
+        public bool IsBasicType { get; set; }
     }
 
     public class ModelDetailCollection : System.Collections.ObjectModel.KeyedCollection<string, ModelDetail>

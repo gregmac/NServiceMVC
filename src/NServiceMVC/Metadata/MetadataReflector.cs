@@ -121,7 +121,13 @@ namespace NServiceMVC.Metadata
 
         #region GetModelTypes()
         private static ModelDetailCollection _modelTypesCache;
-        public static ModelDetailCollection GetModelTypes()
+        /// <summary>
+        /// Gets known model data types (cached). 
+        /// </summary>
+        /// <param name="includeBasicTypes">If the list should include basic types or not. 
+        /// Basic types are type such as string, int that are in the System.* namspace.</param>
+        /// <returns></returns>
+        public static ModelDetailCollection GetModelTypes(bool includeBasicTypes = true)
         {
             if (_modelTypesCache == null)
             {
@@ -139,9 +145,32 @@ namespace NServiceMVC.Metadata
                     models.Add(detail);
                 }
 
+                // add basic types
+                models.Add(CreateModelDetail(typeof(Int16), hasMetadata: true, defaultDescription: "16-bit signed integer"));
+                models.Add(CreateModelDetail(typeof(Int32), hasMetadata: true, defaultDescription: "32-bit signed integer"));
+                models.Add(CreateModelDetail(typeof(Int64), hasMetadata: true, defaultDescription: "64-bit signed integer"));
+                models.Add(CreateModelDetail(typeof(UInt16), hasMetadata: true, defaultDescription: "16-bit unsigned integer"));
+                models.Add(CreateModelDetail(typeof(UInt32), hasMetadata: true, defaultDescription: "32-bit unsigned integer"));
+                models.Add(CreateModelDetail(typeof(UInt64), hasMetadata: true, defaultDescription: "64-bit unsigned integer"));
+                models.Add(CreateModelDetail(typeof(String), hasMetadata: true, defaultDescription: "String (unicode supported)"));
+                models.Add(CreateModelDetail(typeof(Boolean), hasMetadata: true, defaultDescription: "True/False value"));
+                models.Add(CreateModelDetail(typeof(Single), hasMetadata: true, defaultDescription: "Single-precision floating-point number"));
+                models.Add(CreateModelDetail(typeof(Double), hasMetadata: true, defaultDescription: "Double-precision floating-point number"));
+                models.Add(CreateModelDetail(typeof(Decimal), hasMetadata: true, defaultDescription: "Decimal number"));
+                models.Add(CreateModelDetail(typeof(Char), hasMetadata: true, defaultDescription: "Single character (unicode supported)"));
+                models.Add(CreateModelDetail(typeof(DateTime), hasMetadata: true, defaultDescription: "Date and time"));
+                models.Add(CreateModelDetail(typeof(TimeSpan), hasMetadata: true, defaultDescription: "Time interval"));
+                models.Add(CreateModelDetail(typeof(Byte), hasMetadata: true, defaultDescription: "8-bit unsigned integer"));
+                models.Add(CreateModelDetail(typeof(SByte), hasMetadata: true, defaultDescription: "8-bit signed integer"));
+
+
                 _modelTypesCache = new ModelDetailCollection(models.OrderBy(x => x.Name));
             }
-            return _modelTypesCache;
+
+            if (includeBasicTypes)
+                return _modelTypesCache;
+            else
+                return new ModelDetailCollection(from m in _modelTypesCache where m.IsBasicType == false select m);
         }
         #endregion
 
@@ -153,7 +182,9 @@ namespace NServiceMVC.Metadata
         /// <returns></returns>
         private static ModelDetail CreateModelDetail(System.Type type)
         {
-            var hasMetadata = (from t in GetModelTypes() where t.Name == type.FullName select true).FirstOrDefault();
+
+            var hasMetadata = Utilities.DefaultValueGenerator.IsBasicType(type) 
+                              || (from t in GetModelTypes() where t.Name == type.FullName select true).FirstOrDefault();
             return CreateModelDetail(type, hasMetadata);
         }
         /// <summary>
@@ -161,18 +192,20 @@ namespace NServiceMVC.Metadata
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        private static ModelDetail CreateModelDetail(System.Type type, bool hasMetadata)
+        private static ModelDetail CreateModelDetail(System.Type type, bool hasMetadata, string defaultDescription = null)
         {
             var detail = new ModelDetail
             {
                 Name = type.GetName(),
                 HasMetadata = hasMetadata,
+                IsBasicType = Utilities.DefaultValueGenerator.IsBasicType(type),
+                Description = defaultDescription,
             };
 
             var descriptionAttr = (System.ComponentModel.DescriptionAttribute)(type.GetCustomAttributes(typeof(System.ComponentModel.DescriptionAttribute), true).FirstOrDefault());
             if (descriptionAttr != null) detail.Description = descriptionAttr.Description;
 
-            object modelSample = CreateSampleObject(type); 
+            object modelSample = Utilities.DefaultValueGenerator.GetSampleInstance(type); 
             
             if (NServiceMVC.Formatter.JSON != null)
             {
@@ -203,36 +236,37 @@ namespace NServiceMVC.Metadata
             return detail;
         }
 
-        private static object CreateSampleObject(System.Type type)
-        {
-            return Utilities.DefaultValueGenerator.GetDefaultValue(type);
-
-           
-        }
-
-        // from http://stackoverflow.com/questions/9104642/generate-source-code-for-class-definition-given-a-system-type/9104978#9104978
+                // from http://stackoverflow.com/questions/9104642/generate-source-code-for-class-definition-given-a-system-type/9104978#9104978
         private static string GetCSharpCode(Type t)
         {
             var sb = new StringBuilder();
-            sb.AppendFormat("public class {0}\n{{\n", t.GetName());
+            if (Utilities.DefaultValueGenerator.IsBasicType(t))
+            {
+                sb.AppendFormat("{0} {1};\n", t.GetName(), "value");
+            }
+            else
+            {
+                sb.AppendFormat("public class {0}\n{{\n", t.GetName());
+
+                foreach (var field in t.GetFields())
+                {
+                    sb.AppendFormat("    public {0} {1};\n",
+                        field.FieldType.Name,
+                        field.Name);
+                }
+
+                foreach (var prop in t.GetProperties())
+                {
+                    sb.AppendFormat("    public {0} {1} {{{2}{3}}}\n",
+                        prop.PropertyType.Name,
+                        prop.Name,
+                        prop.CanRead ? " get;" : "",
+                        prop.CanWrite ? " set; " : " ");
+                }
+
+                sb.AppendLine("}");
+            }
             
-            foreach (var field in t.GetFields())
-            {
-                sb.AppendFormat("    public {0} {1};\n",
-                    field.FieldType.Name,
-                    field.Name);
-            }
-
-            foreach (var prop in t.GetProperties())
-            {
-                sb.AppendFormat("    public {0} {1} {{{2}{3}}}\n",
-                    prop.PropertyType.Name,
-                    prop.Name,
-                    prop.CanRead ? " get;" : "",
-                    prop.CanWrite ? " set; " : " ");
-            }
-
-            sb.AppendLine("}");
             return sb.ToString();
         } 
     }

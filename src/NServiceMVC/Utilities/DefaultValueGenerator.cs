@@ -14,10 +14,16 @@ namespace NServiceMVC.Utilities
     {
         private DefaultValueGenerator() { }
 
-
+        /// <summary>
+        /// Gets a "sample" instance of type T. This tries to populate all public properties/fields
+        /// of the type using sample values, including other sub-objects and collections.
+        /// For collections, a single entry of the collection type is added.
+        /// </summary>
+        /// <param name="T"></param>
+        /// <returns></returns>
         public static object GetSampleInstance(Type T)
         {
-            var sample = TrySampleBasicTypes(T); // try to create using "known" types
+            var sample = GetBasicTypeValue(T); // try to create using "known" types
             if (sample == null)
             {
                 if (T.IsArray)
@@ -64,7 +70,12 @@ namespace NServiceMVC.Utilities
         }
 
 
-        private static bool IsBasicType(Type T)
+        /// <summary>
+        /// Returns true if the type T is one of the basic types supported in System.* namespace
+        /// </summary>
+        /// <param name="T"></param>
+        /// <returns></returns>
+        public static bool IsBasicType(Type T)
         {
             switch (T.Name)
             {
@@ -89,7 +100,13 @@ namespace NServiceMVC.Utilities
             return false;
         }
 
-        private static object TrySampleBasicTypes(Type T)
+        /// <summary>
+        /// Gets the value for one of the basic types (defined in System.* namespace), if T is a basic type.
+        /// If not, returns null.
+        /// </summary>
+        /// <param name="T"></param>
+        /// <returns></returns>
+        public static object GetBasicTypeValue(Type T)
         {
             switch (T.Name)
             {
