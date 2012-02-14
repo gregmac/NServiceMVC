@@ -10,98 +10,135 @@ using Utilities.Reflection.ExtensionMethods;
 
 namespace NServiceMVC.Metadata
 {
-    class MetadataReflector
+    /// <summary>
+    /// Finds metadata related to the models and routes currently configured.
+    /// </summary>
+    public class MetadataReflector
     {
-
-        private static IEnumerable<RouteDetails> _routeDetailsCache;
-        public static IEnumerable<RouteDetails> GetRouteDetails()
+        /// <summary>
+        /// Creates a new instance of the reflector
+        /// </summary>
+        /// <param name="config">The current NServiceMVC configuration</param>
+        /// <param name="formatter">The current NServiceMVC FormatManager</param>
+        public MetadataReflector(NServiceMVC.NsConfiguration config, Formats.FormatManager formatter)
         {
-            if (_routeDetailsCache == null)
+            Configuration = config;
+            Formatter = formatter;
+
+            // note: must initialize model before route
+            ModelTypes = FindModelTypes();
+            BasicModelTypes = FindBasicModelTypes();
+
+            RouteDetails = FindRouteDetails();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IEnumerable<RouteDetails> RouteDetails { get; private set; }
+
+        /// <summary>
+        /// Registered, known model types
+        /// </summary>
+        public virtual ModelDetailCollection ModelTypes { get; private set; }
+
+        /// <summary>
+        /// Basic System.* types represented as models
+        /// </summary>
+        public virtual ModelDetailCollection BasicModelTypes { get; private set; }
+
+        /// <summary>
+        /// NServiceMVC configuration 
+        /// </summary>
+        public virtual NServiceMVC.NsConfiguration Configuration { get; private set; }
+
+        /// <summary>
+        /// NServiceMVC formatter
+        /// </summary>
+        public virtual Formats.FormatManager Formatter { get; private set; }
+
+        private IEnumerable<RouteDetails> FindRouteDetails()
+        {
+            var routeDetailsCache = new List<RouteDetails>();
+
+            var methods = (from a in Configuration.ControllerAssemblies
+                            from c in a.GetTypes()
+                            from m in c.GetMethods()
+                            where c.IsSubclassOf(typeof(ServiceController))
+                            where m.GetCustomAttributes(typeof(AttributeRouting.RouteAttribute), true).Count() > 0
+                            select m).Distinct();
+
+            foreach (var method in methods)
             {
-                var routeDetailsCache = new List<RouteDetails>();
+                //todo: get return type, description
 
-                var methods = (from a in NServiceMVC.Configuration.ControllerAssemblies
-                               from c in a.GetTypes()
-                               from m in c.GetMethods()
-                               where c.IsSubclassOf(typeof(ServiceController))
-                               where m.GetCustomAttributes(typeof(AttributeRouting.RouteAttribute), true).Count() > 0
-                               select m).Distinct();
+                var descriptionAttr = (System.ComponentModel.DescriptionAttribute)(method.GetCustomAttributes(typeof(System.ComponentModel.DescriptionAttribute), true).FirstOrDefault());
+                string description = string.Empty;
+                if (descriptionAttr != null) description = descriptionAttr.Description;
 
-                foreach (var method in methods)
+
+                var routeAttrs = from a in method.GetCustomAttributes(typeof(AttributeRouting.RouteAttribute), true)
+                                    select (AttributeRouting.RouteAttribute)a;
+
+                foreach (var routeAttr in routeAttrs)
                 {
-                    //todo: get return type, description
-
-                    var descriptionAttr = (System.ComponentModel.DescriptionAttribute)(method.GetCustomAttributes(typeof(System.ComponentModel.DescriptionAttribute), true).FirstOrDefault());
-                    string description = string.Empty;
-                    if (descriptionAttr != null) description = descriptionAttr.Description;
-
-
-                    var routeAttrs = from a in method.GetCustomAttributes(typeof(AttributeRouting.RouteAttribute), true)
-                                     select (AttributeRouting.RouteAttribute)a;
-
-                    foreach (var routeAttr in routeAttrs)
+                    var route = new RouteDetails
                     {
-                        var route = new RouteDetails
-                        {
-                            Url = routeAttr.Url,
-                            Method = GetHttpMethod(routeAttr.HttpMethods),
-                            Description = description,
-                            ReturnType = CreateModelDetail(method.ReturnType),
-                        };
+                        Url = routeAttr.Url,
+                        Method = GetHttpMethod(routeAttr.HttpMethods),
+                        Description = description,
+                        ReturnType = CreateModelDetail(method.ReturnType),
+                    };
 
-                        // find names of parameters that exist in the URL
-                        var urlParams = from m in (new Regex("\\{([a-zA-Z_][a-zA-Z0-9_]*)\\}")).Matches(routeAttr.Url).Cast<Match>()
-                                        select m.Groups[1].Value;
-                        var urls = urlParams.ToArray();
+                    // find names of parameters that exist in the URL
+                    var urlParams = from m in (new Regex("\\{([a-zA-Z_][a-zA-Z0-9_]*)\\}")).Matches(routeAttr.Url).Cast<Match>()
+                                    select m.Groups[1].Value;
+                    var urls = urlParams.ToArray();
 
-                        var actualParams = method.GetParameters();
+                    var actualParams = method.GetParameters();
 
-                        // find the first parameter that doesn't exist in the URL -- this is our model
-                        var modelParam = (from p in actualParams
-                                          where !urlParams.Contains(p.Name)
-                                          select p).FirstOrDefault();
-                        if (modelParam != null)
-                        {
-                            route.ModelType = CreateModelDetail(modelParam.ParameterType);
-                        }
-
-
-
-
-                        var actualParamNames = from p in actualParams
-                                               select p.Name;
-
-                        route.Parameters =
-                            (
-                                from p in actualParams   // find parameter specified in the method and used in the URL
-                                where urlParams.Contains(p.Name)
-                                select new RouteDetails.ParameterDetails
-                                {
-                                    Name = p.Name,
-                                    Type = p.ParameterType.Name,
-                                    Default = p.DefaultValue.ToString(),
-                                }
-                            ).Union(
-                                from name in urlParams   // find parameters specified in the URL, but not used by the actual method
-                                where !actualParamNames.Contains(name)
-                                select new RouteDetails.ParameterDetails
-                                {
-                                    Name = name,
-                                    Type = "IGNORED",
-                                    Default = string.Empty,
-                                }
-                            ).ToList();
-
-                        routeDetailsCache.Add(route);
-
+                    // find the first parameter that doesn't exist in the URL -- this is our model
+                    var modelParam = (from p in actualParams
+                                        where !urlParams.Contains(p.Name)
+                                        select p).FirstOrDefault();
+                    if (modelParam != null)
+                    {
+                        route.ModelType = CreateModelDetail(modelParam.ParameterType);
                     }
+
+
+                    var actualParamNames = from p in actualParams
+                                            select p.Name;
+
+                    route.Parameters =
+                        (
+                            from p in actualParams   // find parameter specified in the method and used in the URL
+                            where urlParams.Contains(p.Name)
+                            select new RouteDetails.ParameterDetails
+                            {
+                                Name = p.Name,
+                                Type = p.ParameterType.Name,
+                                Default = p.DefaultValue.ToString(),
+                            }
+                        ).Union(
+                            from name in urlParams   // find parameters specified in the URL, but not used by the actual method
+                            where !actualParamNames.Contains(name)
+                            select new RouteDetails.ParameterDetails
+                            {
+                                Name = name,
+                                Type = "IGNORED",
+                                Default = string.Empty,
+                            }
+                        ).ToList();
+
+                    routeDetailsCache.Add(route);
 
                 }
 
-                // order by URL, then method
-                _routeDetailsCache = routeDetailsCache.OrderBy(x => x.Url + x.Method);
             }
-            return _routeDetailsCache;
+
+            // order by URL, then method
+            return routeDetailsCache.OrderBy(x => x.Url + x.Method);
         }
 
         /// <summary>
@@ -120,57 +157,57 @@ namespace NServiceMVC.Metadata
         }
 
         #region GetModelTypes()
-        private static ModelDetailCollection _modelTypesCache;
         /// <summary>
         /// Gets known model data types (cached). 
         /// </summary>
-        /// <param name="includeBasicTypes">If the list should include basic types or not. 
-        /// Basic types are type such as string, int that are in the System.* namspace.</param>
         /// <returns></returns>
-        public static ModelDetailCollection GetModelTypes(bool includeBasicTypes = true)
+        private ModelDetailCollection FindModelTypes()
         {
-            if (_modelTypesCache == null)
+            List<ModelDetail> models = new List<ModelDetail>();
+
+            var modelTypes = (from a in Configuration.ModelAssemblies
+                                from c in a.Assembly.GetTypes()
+                                where string.IsNullOrEmpty(a.Namespace) || (a.Namespace == c.Namespace)
+                                select c).Distinct();
+
+
+            foreach (var model in modelTypes)
             {
-                List<ModelDetail> models = new List<ModelDetail>();
-
-                var modelTypes = (from a in NServiceMVC.Configuration.ModelAssemblies
-                                  from c in a.Assembly.GetTypes()
-                                  where string.IsNullOrEmpty(a.Namespace) || (a.Namespace == c.Namespace)
-                                  select c).Distinct();
-
-
-                foreach (var model in modelTypes)
-                {
-                    var detail = CreateModelDetail(model, hasMetadata:true);
-                    models.Add(detail);
-                }
-
-                // add basic types
-                models.Add(CreateModelDetail(typeof(Int16), hasMetadata: true, defaultDescription: "16-bit signed integer"));
-                models.Add(CreateModelDetail(typeof(Int32), hasMetadata: true, defaultDescription: "32-bit signed integer"));
-                models.Add(CreateModelDetail(typeof(Int64), hasMetadata: true, defaultDescription: "64-bit signed integer"));
-                models.Add(CreateModelDetail(typeof(UInt16), hasMetadata: true, defaultDescription: "16-bit unsigned integer"));
-                models.Add(CreateModelDetail(typeof(UInt32), hasMetadata: true, defaultDescription: "32-bit unsigned integer"));
-                models.Add(CreateModelDetail(typeof(UInt64), hasMetadata: true, defaultDescription: "64-bit unsigned integer"));
-                models.Add(CreateModelDetail(typeof(String), hasMetadata: true, defaultDescription: "String (unicode supported)"));
-                models.Add(CreateModelDetail(typeof(Boolean), hasMetadata: true, defaultDescription: "True/False value"));
-                models.Add(CreateModelDetail(typeof(Single), hasMetadata: true, defaultDescription: "Single-precision floating-point number"));
-                models.Add(CreateModelDetail(typeof(Double), hasMetadata: true, defaultDescription: "Double-precision floating-point number"));
-                models.Add(CreateModelDetail(typeof(Decimal), hasMetadata: true, defaultDescription: "Decimal number"));
-                models.Add(CreateModelDetail(typeof(Char), hasMetadata: true, defaultDescription: "Single character (unicode supported)"));
-                models.Add(CreateModelDetail(typeof(DateTime), hasMetadata: true, defaultDescription: "Date and time"));
-                models.Add(CreateModelDetail(typeof(TimeSpan), hasMetadata: true, defaultDescription: "Time interval"));
-                models.Add(CreateModelDetail(typeof(Byte), hasMetadata: true, defaultDescription: "8-bit unsigned integer"));
-                models.Add(CreateModelDetail(typeof(SByte), hasMetadata: true, defaultDescription: "8-bit signed integer"));
-
-
-                _modelTypesCache = new ModelDetailCollection(models.OrderBy(x => x.Name));
+                var detail = CreateModelDetail(model, hasMetadata:true);
+                models.Add(detail);
             }
 
-            if (includeBasicTypes)
-                return _modelTypesCache;
-            else
-                return new ModelDetailCollection(from m in _modelTypesCache where m.IsBasicType == false select m);
+
+            return new ModelDetailCollection(models.OrderBy(x => x.Name));
+        }
+
+        /// <summary>
+        /// Finds built-in System.* types, repesentign them as models
+        /// </summary>
+        /// <returns></returns>
+        private ModelDetailCollection FindBasicModelTypes()
+        {
+            List<ModelDetail> models = new List<ModelDetail>();
+
+            // add basic types
+            models.Add(CreateModelDetail(typeof(Int16), hasMetadata: true, defaultDescription: "16-bit signed integer"));
+            models.Add(CreateModelDetail(typeof(Int32), hasMetadata: true, defaultDescription: "32-bit signed integer"));
+            models.Add(CreateModelDetail(typeof(Int64), hasMetadata: true, defaultDescription: "64-bit signed integer"));
+            models.Add(CreateModelDetail(typeof(UInt16), hasMetadata: true, defaultDescription: "16-bit unsigned integer"));
+            models.Add(CreateModelDetail(typeof(UInt32), hasMetadata: true, defaultDescription: "32-bit unsigned integer"));
+            models.Add(CreateModelDetail(typeof(UInt64), hasMetadata: true, defaultDescription: "64-bit unsigned integer"));
+            models.Add(CreateModelDetail(typeof(String), hasMetadata: true, defaultDescription: "String (unicode supported)"));
+            models.Add(CreateModelDetail(typeof(Boolean), hasMetadata: true, defaultDescription: "True/False value"));
+            models.Add(CreateModelDetail(typeof(Single), hasMetadata: true, defaultDescription: "Single-precision floating-point number"));
+            models.Add(CreateModelDetail(typeof(Double), hasMetadata: true, defaultDescription: "Double-precision floating-point number"));
+            models.Add(CreateModelDetail(typeof(Decimal), hasMetadata: true, defaultDescription: "Decimal number"));
+            models.Add(CreateModelDetail(typeof(Char), hasMetadata: true, defaultDescription: "Single character (unicode supported)"));
+            models.Add(CreateModelDetail(typeof(DateTime), hasMetadata: true, defaultDescription: "Date and time"));
+            models.Add(CreateModelDetail(typeof(TimeSpan), hasMetadata: true, defaultDescription: "Time interval"));
+            models.Add(CreateModelDetail(typeof(Byte), hasMetadata: true, defaultDescription: "8-bit unsigned integer"));
+            models.Add(CreateModelDetail(typeof(SByte), hasMetadata: true, defaultDescription: "8-bit signed integer"));
+
+            return new ModelDetailCollection(models);
         }
         #endregion
 
@@ -180,11 +217,13 @@ namespace NServiceMVC.Metadata
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        private static ModelDetail CreateModelDetail(System.Type type)
+        private ModelDetail CreateModelDetail(System.Type type)
         {
+            if (ModelTypes == null)
+                throw new InvalidOperationException("Models must be initialized before routes");
 
             var hasMetadata = Utilities.DefaultValueGenerator.IsBasicType(type) 
-                              || (from t in GetModelTypes() where t.Name == type.FullName select true).FirstOrDefault();
+                              || (from t in ModelTypes where t.Name == type.FullName select true).FirstOrDefault();
             return CreateModelDetail(type, hasMetadata);
         }
         /// <summary>
@@ -192,7 +231,7 @@ namespace NServiceMVC.Metadata
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        private static ModelDetail CreateModelDetail(System.Type type, bool hasMetadata, string defaultDescription = null)
+        private ModelDetail CreateModelDetail(System.Type type, bool hasMetadata, string defaultDescription = null)
         {
             var detail = new ModelDetail
             {
@@ -207,11 +246,11 @@ namespace NServiceMVC.Metadata
 
             object modelSample = Utilities.DefaultValueGenerator.GetSampleInstance(type); 
             
-            if (NServiceMVC.Formatter.JSON != null)
+            if (Formatter.JSON != null)
             {
                 try
                 {
-                    detail.SampleJson = NServiceMVC.Formatter.JSON.Serialize(modelSample, true);
+                    detail.SampleJson = Formatter.JSON.Serialize(modelSample, true);
                 }
                 catch (Exception ex)
                 {
@@ -219,11 +258,11 @@ namespace NServiceMVC.Metadata
                 }
             }
 
-            if (NServiceMVC.Formatter.XML != null)
+            if (Formatter.XML != null)
             {
                 try
                 {
-                    detail.SampleXml = NServiceMVC.Formatter.XML.Serialize(modelSample, true);
+                    detail.SampleXml = Formatter.XML.Serialize(modelSample, true);
                 }
                 catch (Exception ex)
                 {

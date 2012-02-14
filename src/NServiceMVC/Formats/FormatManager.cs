@@ -8,15 +8,18 @@ namespace NServiceMVC.Formats
     public class FormatManager
     {
 
-        public FormatManager()
+        public FormatManager(NServiceMVC.NsConfiguration config)
         {
-            if (NServiceMVC.Configuration.AllowJson)
+            if (config.AllowJson)
                 JSON = new JsonFormatHandler();
 
-            if (NServiceMVC.Configuration.AllowXml)
+            if (config.AllowXml)
                 XML = new XmlFormatHandler();
 
+            AllowXhtml = config.AllowXhtml;
         }
+
+        protected bool AllowXhtml { get; private set; }
 
         #region Request handling
         public bool TryDeserializeModel(string input, Type modelType, out object model)
@@ -64,7 +67,7 @@ namespace NServiceMVC.Formats
                 case "text/html":
                 case "application/xhtml+xml":
 
-                    if (NServiceMVC.Configuration.AllowXhtml)
+                    if (AllowXhtml)
                     {
                         return new System.Web.Mvc.ContentResult
                         {

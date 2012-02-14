@@ -8,6 +8,14 @@ namespace NServiceMVC.Metadata
 {
     public class MetadataController : Controller
     {
+        public MetadataController()
+        {
+            if (Reflector == null)
+                Reflector = new MetadataReflector(NServiceMVC.Configuration, NServiceMVC.Formatter);
+        }
+
+        public static MetadataReflector Reflector { get; private set; }
+
         public ActionResult Index()
         {
             return Layout("Metadata.html",
@@ -15,8 +23,8 @@ namespace NServiceMVC.Metadata
                 {
                     Model = new Models.MetadataSummary
                     {
-                        Routes = MetadataReflector.GetRouteDetails(),
-                        Models = MetadataReflector.GetModelTypes(includeBasicTypes:false),
+                        Routes = Reflector.RouteDetails,
+                        Models = Reflector.ModelTypes,
                     },
                     BaseUrl = NServiceMVC.GetBaseUrl(),
                     MetadataUrl = NServiceMVC.GetMetadataUrl(),
@@ -33,7 +41,7 @@ namespace NServiceMVC.Metadata
         public ActionResult Op(string id)
         {
             //System.Web.Routing.RouteTable.Routes
-            var route = (from r in MetadataReflector.GetRouteDetails()
+            var route = (from r in Reflector.RouteDetails
                          where r.NiceUrl == id
                          select r).FirstOrDefault();
 
@@ -51,12 +59,22 @@ namespace NServiceMVC.Metadata
 
         public ActionResult Type(string id)
         {
-            var type = MetadataReflector.GetModelTypes()[id];
+            Models.ModelDetail detail;
+            if (Reflector.ModelTypes.Contains(id))
+                detail = Reflector.ModelTypes[id];
+            else if (Reflector.BasicModelTypes.Contains(id))
+                detail = Reflector.BasicModelTypes[id];
+            else
+                detail = new Models.ModelDetail()
+                {
+                    Name = "Unknown type",
+                    Description = "The requested type is unknown",
+                };
 
             return Layout("Type.html",
                 new
                 {
-                    Model = type,
+                    Model = detail,
                     BaseUrl = NServiceMVC.GetBaseUrl(),
                     MetadataUrl = NServiceMVC.GetMetadataUrl(),
                     ContentUrl = NServiceMVC.GetContentUrl(),
@@ -72,7 +90,7 @@ namespace NServiceMVC.Metadata
         public string XhtmlHelpPage(object model)
         {
             var type = model.GetType();
-            var metadata = (from t in MetadataReflector.GetModelTypes()
+            var metadata = (from t in Reflector.ModelTypes
                             where t.Name == type.FullName
                             select t).FirstOrDefault();
 

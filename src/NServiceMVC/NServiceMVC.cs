@@ -36,7 +36,7 @@ namespace NServiceMVC
             if (config != null) config.Invoke(Configuration);
 
 
-            Formatter = new Formats.FormatManager();
+            Formatter = new Formats.FormatManager(Configuration);
         }
 
         #region URLs
@@ -86,16 +86,26 @@ namespace NServiceMVC
         /// </summary>
         public class NsConfiguration
         {
-            public NsConfiguration(Assembly callingAssembly)
+            /// <summary>
+            /// Creates a new instance of configuration. ApplicationTitle is not set.
+            /// </summary>
+            public NsConfiguration()
             {
                 ControllerAssemblies = new List<System.Reflection.Assembly>();
                 ModelAssemblies = new List<ModelAssembly>();
 
-                ApplicationTitle = callingAssembly.GetName().Name;
-
                 AllowJson = true;
                 AllowXhtml = true;
                 AllowXml = true;
+            }
+
+            /// <summary>
+            /// Creates a new instance of configuration. ApplicationTitle is set to the calling assembly name
+            /// </summary>
+            public NsConfiguration(Assembly callingAssembly)
+                : base()
+            {
+                ApplicationTitle = callingAssembly.GetName().Name;
             }
 
 
@@ -107,14 +117,14 @@ namespace NServiceMVC
             /// metadata output. Controllers must be inherited from <see cref="ServiceController"/>.
             /// </summary>
             /// <param name="assembly"></param>
-            public List<Assembly> ControllerAssemblies { get; private set; }
+            public virtual List<Assembly> ControllerAssemblies { get; private set; }
 
             /// <summary>
             /// Register an assembly as containing controller methods to be included in 
             /// metadata output. Controllers must be inherited from <see cref="ServiceController"/>.
             /// </summary>
             /// <param name="assembly"></param>
-            public void RegisterControllerAssembly(Assembly assembly)
+            public virtual void RegisterControllerAssembly(Assembly assembly)
             {
                 ControllerAssemblies.Add(assembly);
             }
@@ -132,13 +142,13 @@ namespace NServiceMVC
             /// The list of assemblies and namespaces containing models which
             /// will be included in metadata information.
             /// </summary>
-            public List<ModelAssembly> ModelAssemblies { get; private set; }
+            public virtual List<ModelAssembly> ModelAssemblies { get; private set; }
 
             /// <summary>
             /// Registers all types in the givven assembly as models
             /// </summary>
             /// <param name="assembly"></param>
-            public void RegisterModelAssembly(Assembly assembly)
+            public virtual void RegisterModelAssembly(Assembly assembly)
             {
                 RegisterModelAssembly(assembly, null);
             }
@@ -161,13 +171,13 @@ namespace NServiceMVC
             /// <summary>
             /// The path (relative to virtual app dir) to the metadata controller
             /// </summary>
-            public string MetadataUrl { get; private set; }
+            public virtual string MetadataUrl { get; private set; }
 
             /// <summary>
             /// Set the location where metadata is served from
             /// </summary>
             /// <param name="baseUrl"></param>
-            public void Metadata(string baseUrl = "metadata")
+            public virtual void Metadata(string baseUrl = "metadata")
             {
                 MetadataUrl = baseUrl.TrimEnd('/').TrimStart(new char[] { '~', '/' });
 
@@ -185,14 +195,14 @@ namespace NServiceMVC
             #endregion
 
 
-            public bool AllowJson { get; set; }
-            public bool AllowXml { get; set; }
-            public bool AllowXhtml { get; set; }
+            public virtual bool AllowJson { get; set; }
+            public virtual bool AllowXml { get; set; }
+            public virtual bool AllowXhtml { get; set; }
 
             /// <summary>
             /// If JSON is converted to camelCase (otherwise left as-is)
             /// </summary>
-            public bool JsonCamelCase { get; set; }
+            public virtual bool JsonCamelCase { get; set; }
 
         }
     }
