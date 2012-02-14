@@ -16,9 +16,19 @@ namespace NServiceMVC
     /// </summary>
     public class ServiceException : Exception, IServiceException 
     {
+        /// <summary>
+        /// Throw a 500 - Internal Server Error, with the specified model as the content. 
+        /// The model will be serialized according to the accept-types, just like a normal
+        /// service response.
+        /// </summary>
         public ServiceException(object model) 
-            : this(System.Net.HttpStatusCode.OK, model) { }
+            : this(System.Net.HttpStatusCode.InternalServerError, model) { }
 
+        /// <summary>
+        /// Return a specific HTTP status code with the specified model as the content. 
+        /// The model will be serialized according to the accept-types, just like a normal
+        /// service response.
+        /// </summary>
         public ServiceException(System.Net.HttpStatusCode statusCode, object model) 
             : base(model.ToString()) 
         {
