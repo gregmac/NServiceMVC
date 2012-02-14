@@ -76,8 +76,9 @@ namespace NServiceMVC.Utilities
                 case "UInt64": 
                 case "String": 
                 case "Boolean": 
-                case "Single": 
-                case "Double": 
+                case "Single":
+                case "Double":
+                case "Decimal": 
                 case "Char": 
                 case "DateTime": 
                 case "TimeSpan": 
@@ -102,6 +103,7 @@ namespace NServiceMVC.Utilities
                 case "Boolean": return (Boolean)true;
                 case "Single": return (Single)100.123;
                 case "Double": return (Double)200.123;
+                case "Decimal": return (Decimal)12345.6789;
                 case "Char": return (Char)'x';
                 case "DateTime": return new DateTime(2012,01,01,00,00,00);
                 case "TimeSpan": return (TimeSpan)TimeSpan.FromDays(1);
@@ -207,6 +209,7 @@ namespace NServiceMVC.Utilities
                 case "Boolean": return (Boolean)val == default(Boolean);
                 case "Single": return (Single)val == default(Single);
                 case "Double": return (Double)val == default(Double);
+                case "Decimal": return (Decimal)val == default(Decimal);
                 case "Char": return (Char)val == default(Char);
                 case "DateTime": return (DateTime)val == default(DateTime);
                 case "TimeSpan": return (TimeSpan)val == default(TimeSpan);

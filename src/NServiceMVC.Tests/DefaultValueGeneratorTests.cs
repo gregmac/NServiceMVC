@@ -26,6 +26,7 @@ namespace NServiceMVC.Tests
             Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(Boolean)), Is.EqualTo((bool)true));
             Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(Single)), Is.EqualTo((Single)100.123));
             Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(Double)), Is.EqualTo((Double)200.123));
+            Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(Decimal)), Is.EqualTo((Decimal)12345.6789));
             Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(Char)), Is.EqualTo((char)'x'));
             Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(DateTime)), Is.EqualTo(new DateTime(2012, 01, 01, 00, 00, 00)));
             Assert.That(Utilities.DefaultValueGenerator.GetSampleInstance(typeof(TimeSpan)), Is.EqualTo(TimeSpan.FromDays(1)));
@@ -48,6 +49,7 @@ namespace NServiceMVC.Tests
             public Boolean BooleanField;
             public Single SingleField;
             public Double DoubleField;
+            public Decimal DecimalField;
             public Char CharField;
             public DateTime DateTimeField;
             public TimeSpan TimeSpanField;
@@ -64,6 +66,7 @@ namespace NServiceMVC.Tests
             public Boolean BooleanProp { get; set; }
             public Single SingleProp { get; set; }
             public Double DoubleProp { get; set; }
+            public Decimal DecimalProp { get; set; }
             public Char CharProp { get; set; }
             public DateTime DateTimeProp { get; set; }
             public TimeSpan TimeSpanProp { get; set; }
@@ -88,6 +91,7 @@ namespace NServiceMVC.Tests
             Assert.That(((TestBasicTypes)sample).BooleanField, Is.EqualTo((bool)true));
             Assert.That(((TestBasicTypes)sample).SingleField, Is.EqualTo((Single)100.123));
             Assert.That(((TestBasicTypes)sample).DoubleField, Is.EqualTo((Double)200.123));
+            Assert.That(((TestBasicTypes)sample).DecimalField, Is.EqualTo((Decimal)12345.6789));
             Assert.That(((TestBasicTypes)sample).CharField, Is.EqualTo((char)'x'));
             Assert.That(((TestBasicTypes)sample).DateTimeField, Is.EqualTo(new DateTime(2012, 01, 01, 00, 00, 00)));
             Assert.That(((TestBasicTypes)sample).TimeSpanField, Is.EqualTo(TimeSpan.FromDays(1)));
@@ -104,6 +108,7 @@ namespace NServiceMVC.Tests
             Assert.That(((TestBasicTypes)sample).BooleanProp, Is.EqualTo((bool)true));
             Assert.That(((TestBasicTypes)sample).SingleProp, Is.EqualTo((Single)100.123));
             Assert.That(((TestBasicTypes)sample).DoubleProp, Is.EqualTo((Double)200.123));
+            Assert.That(((TestBasicTypes)sample).DecimalProp, Is.EqualTo((Decimal)12345.6789));
             Assert.That(((TestBasicTypes)sample).CharProp, Is.EqualTo((char)'x'));
             Assert.That(((TestBasicTypes)sample).DateTimeProp, Is.EqualTo(new DateTime(2012, 01, 01, 00, 00, 00)));
             Assert.That(((TestBasicTypes)sample).TimeSpanProp, Is.EqualTo(TimeSpan.FromDays(1)));
@@ -126,6 +131,7 @@ namespace NServiceMVC.Tests
                 BooleanField = true;
                 SingleField = 42.5F;
                 DoubleField = 66.5F;
+                DecimalField = 33.44M;
                 CharField = 'y';
                 DateTimeField = new DateTime(2001,01,01,12,34,56);
                 TimeSpanField = TimeSpan.FromMilliseconds(42);
@@ -142,6 +148,7 @@ namespace NServiceMVC.Tests
                 BooleanProp = true;
                 SingleProp = 42.5F;
                 DoubleProp = 66.5F;
+                DecimalProp = 33.44M;
                 CharProp = 'y';
                 DateTimeProp = new DateTime(2001, 01, 01, 12, 34, 56);
                 TimeSpanProp = TimeSpan.FromMilliseconds(42);
@@ -170,6 +177,7 @@ namespace NServiceMVC.Tests
             Assert.That(((TestBasicTypesInitialized)sample).BooleanField, Is.EqualTo((bool)true));
             Assert.That(((TestBasicTypesInitialized)sample).SingleField, Is.EqualTo((Single)42.5));
             Assert.That(((TestBasicTypesInitialized)sample).DoubleField, Is.EqualTo((Double)66.5));
+            Assert.That(((TestBasicTypesInitialized)sample).DecimalField, Is.EqualTo((Decimal)33.44));
             Assert.That(((TestBasicTypesInitialized)sample).CharField, Is.EqualTo((char)'y'));
             Assert.That(((TestBasicTypesInitialized)sample).DateTimeField, Is.EqualTo(new DateTime(2001, 01, 01, 12, 34, 56)));
             Assert.That(((TestBasicTypesInitialized)sample).TimeSpanField, Is.EqualTo(TimeSpan.FromMilliseconds(42)));
@@ -186,6 +194,7 @@ namespace NServiceMVC.Tests
             Assert.That(((TestBasicTypesInitialized)sample).BooleanProp, Is.EqualTo((bool)true));
             Assert.That(((TestBasicTypesInitialized)sample).SingleProp, Is.EqualTo((Single)42.5));
             Assert.That(((TestBasicTypesInitialized)sample).DoubleProp, Is.EqualTo((Double)66.5));
+            Assert.That(((TestBasicTypesInitialized)sample).DecimalProp, Is.EqualTo((Decimal)33.44));
             Assert.That(((TestBasicTypesInitialized)sample).CharProp, Is.EqualTo((char)'y'));
             Assert.That(((TestBasicTypesInitialized)sample).DateTimeProp, Is.EqualTo(new DateTime(2001, 01, 01, 12, 34, 56)));
             Assert.That(((TestBasicTypesInitialized)sample).TimeSpanProp, Is.EqualTo(TimeSpan.FromMilliseconds(42)));
