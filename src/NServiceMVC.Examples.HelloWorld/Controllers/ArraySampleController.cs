@@ -30,5 +30,18 @@ namespace NServiceMVC.Examples.HelloWorld.Controllers
             return new string[] { "one", "two", "three" };
         }
 
+        [GET("arraysample/hello/{name}")]
+        public List<Models.HelloResponse> HelloList(string name)
+        {
+            return new List<Models.HelloResponse>() { 
+                new Models.HelloResponse() { GreetingType = "Hello", Name = name },
+                new Models.HelloResponse() { GreetingType = "Bonjour", Name = name },
+                new Models.HelloResponse() { GreetingType = "¡Hola", Name = name },
+                new Models.HelloResponse() { GreetingType = "こんにちは", Name = name },
+                new Models.HelloResponse() { GreetingType = "שלום", Name = name },
+                new Models.HelloResponse() { GreetingType = "привет", Name = name },
+                new Models.HelloResponse() { GreetingType = "Hallå", Name = name },
+            };
+        }
     }
 }
