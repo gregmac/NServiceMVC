@@ -87,6 +87,15 @@ namespace NServiceMVC
         public class NsConfiguration
         {
             /// <summary>
+            /// Creates a new instance of configuration. ApplicationTitle is set to the calling assembly name
+            /// </summary>
+            public NsConfiguration(Assembly callingAssembly)
+                : this()
+            {
+                ApplicationTitle = callingAssembly.GetName().Name;
+            }
+
+            /// <summary>
             /// Creates a new instance of configuration. ApplicationTitle is not set.
             /// </summary>
             public NsConfiguration()
@@ -98,16 +107,6 @@ namespace NServiceMVC
                 AllowXhtml = true;
                 AllowXml = true;
             }
-
-            /// <summary>
-            /// Creates a new instance of configuration. ApplicationTitle is set to the calling assembly name
-            /// </summary>
-            public NsConfiguration(Assembly callingAssembly)
-                : base()
-            {
-                ApplicationTitle = callingAssembly.GetName().Name;
-            }
-
 
             public string ApplicationTitle { get; set; }
 
