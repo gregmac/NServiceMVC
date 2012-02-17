@@ -31,9 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AttributeRouting, Version=1.4.0.40952, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AttributeRouting.1.4\lib\net40\AttributeRouting.dll</HintPath>
+    <Reference Include="AttributeRouting, Version=1.5.4426.30150, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\AttributeRouting.1.5.4426\lib\net40\AttributeRouting.dll</HintPath>
     </Reference>
     <Reference Include="DotLiquid, Version=1.6.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

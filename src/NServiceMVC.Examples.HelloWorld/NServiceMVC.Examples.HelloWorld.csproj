@@ -14,6 +14,7 @@
     <AssemblyName>NServiceMVC.Examples.HelloWorld</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,9 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AttributeRouting, Version=1.4.0.40952, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="AttributeRouting, Version=1.5.4426.30150, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AttributeRouting.1.4\lib\net40\AttributeRouting.dll</HintPath>
+      <HintPath>..\packages\AttributeRouting.1.5.4426\lib\net40\AttributeRouting.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.4.1.10331.0\lib\EntityFramework.dll</HintPath>
