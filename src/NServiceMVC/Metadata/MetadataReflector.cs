@@ -84,14 +84,14 @@ namespace NServiceMVC.Metadata
                 {
                     var route = new RouteDetails
                     {
-                        Url = routeAttr.Url,
+                        Url = routeAttr.RouteUrl,
                         Method = GetHttpMethod(routeAttr.HttpMethods),
                         Description = description,
                         ReturnType = CreateModelDetail(method.ReturnType),
                     };
 
                     // find names of parameters that exist in the URL
-                    var urlParams = from m in (new Regex("\\{([a-zA-Z_][a-zA-Z0-9_]*)\\}")).Matches(routeAttr.Url).Cast<Match>()
+                    var urlParams = from m in (new Regex("\\{([a-zA-Z_][a-zA-Z0-9_]*)\\}")).Matches(routeAttr.RouteUrl).Cast<Match>()
                                     select m.Groups[1].Value;
                     var urls = urlParams.ToArray();
 
