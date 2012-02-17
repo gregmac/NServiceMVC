@@ -10,3 +10,4 @@ _ReSharper.*
 artifacts/*.nupkg
 App_Data/
 build/nuget.*/lib/*
+src/packages/
