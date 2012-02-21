@@ -59,17 +59,7 @@ namespace NServiceMVC.Metadata
 
         public ActionResult Type(string id)
         {
-            Models.ModelDetail detail;
-            if (Reflector.ModelTypes.Contains(id))
-                detail = Reflector.ModelTypes[id];
-            else if (Reflector.BasicModelTypes.Contains(id))
-                detail = Reflector.BasicModelTypes[id];
-            else
-                detail = new Models.ModelDetail()
-                {
-                    Name = "Unknown type",
-                    Description = "The requested type is unknown",
-                };
+            var detail = Reflector.FindModelDetail(id);
 
             return Layout("Type.html",
                 new

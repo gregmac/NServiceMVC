@@ -57,6 +57,53 @@ namespace NServiceMVC.Metadata
         /// </summary>
         public virtual Formats.FormatManager Formatter { get; private set; }
 
+        /// <summary>
+        /// Finds model details for a given type by its string name
+        /// </summary>
+        /// <param name="typeName"></param>
+        /// <returns></returns>
+        public ModelDetail FindModelDetail(string typeName)
+        {
+            bool isArray = false;
+            System.Text.RegularExpressions.Match match;
+            if ((match = System.Text.RegularExpressions.Regex.Match(typeName, "Array\\[(?<type>.*)\\]")).Success)
+            {
+                typeName = match.Groups["type"].Value;
+                isArray = true;
+            }
+
+            Models.ModelDetail detail = null;
+            if (ModelTypes.Contains(typeName))
+                detail = ModelTypes[typeName];
+            else if (BasicModelTypes.Contains(typeName))
+                detail = BasicModelTypes[typeName];
+
+            if ((detail != null) && isArray)
+            {
+                detail = GetModelDetailArray(detail.ModelType);
+            }
+
+            if (detail == null)    
+                detail = new Models.ModelDetail()
+                {
+                    Name = "Unknown type",
+                    Description = "The requested type is unknown",
+                };
+
+            return detail;
+        }
+
+        /// <summary>
+        /// Create ModelDetail of an array of the passed type
+        /// </summary>
+        /// <param name="type">The element type of the array</param>
+        /// <returns></returns>
+        private ModelDetail GetModelDetailArray(Type type)
+        {
+            var arrayType = Array.CreateInstance(type, 1).GetType();
+            return CreateModelDetail(arrayType, true, null);
+        }
+
         private IEnumerable<RouteDetails> FindRouteDetails()
         {
             var routeDetailsCache = new List<RouteDetails>();
@@ -239,13 +286,24 @@ namespace NServiceMVC.Metadata
                 HasMetadata = hasMetadata,
                 IsBasicType = Utilities.DefaultValueGenerator.IsBasicType(type),
                 Description = defaultDescription,
+                ModelType = type,
             };
+
+            if (IsArrayOrEnumerableSingle(type))
+            {
+                var innerType = type.IsArray ? type.GetElementType() : type.GetGenericArguments()[0];
+
+                detail.ArrayDetail = CreateModelDetail(innerType);
+
+                detail.IsArray = true;
+
+                detail.Name = string.Format("Array[{0}]", innerType.GetName());
+            }
 
             var descriptionAttr = (System.ComponentModel.DescriptionAttribute)(type.GetCustomAttributes(typeof(System.ComponentModel.DescriptionAttribute), true).FirstOrDefault());
             if (descriptionAttr != null) detail.Description = descriptionAttr.Description;
 
-            object modelSample = Utilities.DefaultValueGenerator.GetSampleInstance(type); 
-            
+            object modelSample = Utilities.DefaultValueGenerator.GetSampleInstance(type);
             if (Formatter.JSON != null)
             {
                 try
@@ -275,11 +333,22 @@ namespace NServiceMVC.Metadata
             return detail;
         }
 
+        /// <summary>
+        /// Checks if the type is an array or Enumerable (single-element arrays/lists only: not dictionaries/hashes)
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private static bool IsArrayOrEnumerableSingle(Type type)
+        {
+            return type.IsArray || (type.IsIEnumerable() && type.GetGenericArguments().Count() == 1);
+        }
+
+
                 // from http://stackoverflow.com/questions/9104642/generate-source-code-for-class-definition-given-a-system-type/9104978#9104978
         private static string GetCSharpCode(Type t)
         {
             var sb = new StringBuilder();
-            if (Utilities.DefaultValueGenerator.IsBasicType(t))
+            if (Utilities.DefaultValueGenerator.IsBasicType(t) || IsArrayOrEnumerableSingle(t))
             {
                 sb.AppendFormat("{0} {1};\n", t.GetName(), "value");
             }

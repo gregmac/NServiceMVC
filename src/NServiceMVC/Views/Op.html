@@ -43,10 +43,8 @@
 
             <h3>Model Type <small>Data type sent as body</small></h3>
             <p>
-                {% if Route.ModelType.HasMetadata %}
+                {% if Route.ModelType.Name %}
                     <a href="{{MetadataUrl}}type/{{Route.ModelType.Name | escape}}">{{Route.ModelType.Name}}</a>
-                {% elseif Route.ModelType.Name %}
-                    {{Route.ModelType.Name}}
                 {% else %}
                     <em>No model for this operation.</em>
                 {% endif %}
@@ -55,10 +53,8 @@
             
             <h3>Return Type</h3>
             <p>
-                {% if Route.ReturnType.HasMetadata %}
+                {% if Route.ReturnType.Name %}
                     <a href="{{MetadataUrl}}type/{{Route.ReturnType.Name | escape}}">{{Route.ReturnType.Name}}</a>
-                {% elseif Route.ReturnType.Name %}
-                    {{Route.ReturnType.Name}}
                 {% else %}
                     <em>Not available.</em>
                 {% endif %}
