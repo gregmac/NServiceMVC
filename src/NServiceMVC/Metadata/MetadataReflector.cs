@@ -159,13 +159,13 @@ namespace NServiceMVC.Metadata
 
                     route.Parameters =
                         (
-                            from p in actualParams   // find parameter specified in the method and used in the URL
-                            where urlParams.Contains(p.Name)
+                            from p in actualParams   // find parameter specified in the method 
                             select new RouteDetails.ParameterDetails
                             {
                                 Name = p.Name,
                                 Type = p.ParameterType.Name,
                                 Default = p.DefaultValue.ToString(),
+                                InUrl = urlParams.Contains(p.Name),
                             }
                         ).Union(
                             from name in urlParams   // find parameters specified in the URL, but not used by the actual method
@@ -175,6 +175,7 @@ namespace NServiceMVC.Metadata
                                 Name = name,
                                 Type = "IGNORED",
                                 Default = string.Empty,
+                                InUrl = true,
                             }
                         ).ToList();
 
