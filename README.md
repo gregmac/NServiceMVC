@@ -20,6 +20,7 @@ Features
  * Attributes are used to configure paths (currently the metadata provider requires this, but the actual API will actually work without attributes, using standard MVC3 routing)
  * Lightweight. The framework gives you just enough to build a REST service; DI containers, authentication, authorization, caching, logging, etc are up to you to decide and use what you need (or are already using). There are many solutions to all of these problems in the MVC world aleady, it is not the goal of this framework to either dictate or re-implement such functionality.
 
+![Todomvc Metadata Page](http://i.imgur.com/qzkOw.png)
 
 Show me the code! 
 -----------------
