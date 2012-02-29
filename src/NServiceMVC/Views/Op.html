@@ -13,7 +13,7 @@
                 {% endif %}
             </p>
 
-            <h3>URL Parameters</h3>
+            <h3>Parameters</h3>
             {% assign hasParameters = false %}
             {% for t in Route.Parameters %}{% assign hasParameters = true %}{% endfor %} <!-- TODO: there has to be a better way..  -->
 
@@ -23,6 +23,7 @@
                         <tr>
                             <th>Name</th>
                             <th>Type</th>
+                            <th>In URL?</th>
                             <th>Default</th>
                         </tr>
                     </thead>
@@ -31,6 +32,7 @@
                         <tr>
                             <td>{{item.Name}}</td>
                             <td>{{item.Type}}</td>
+                            <td>{% if item.InUrl %}Yes{% else %}No{% endif %}</td>
                             <td>{{item.Default}}</td>
                         </tr>
                     {% endfor %}

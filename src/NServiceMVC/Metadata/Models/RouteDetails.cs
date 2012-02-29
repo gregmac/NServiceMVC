@@ -12,6 +12,7 @@ namespace NServiceMVC.Metadata.Models
             public string Name { get; set; }
             public string Type { get; set; }
             public string Default { get; set; }
+            public bool InUrl { get; set; }
         }
 
         public RouteDetails()

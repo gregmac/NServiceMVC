@@ -1,9 +1,15 @@
 NServiceMVC
 ===========
 
-NServiceMVC is currently in active development, and is very much alpha-quality software at this point (in fact, it may not even work yet).
+NServiceMVC is currently in active development, and is currently being built in conjunction with a piece of commercial software. 
+
+Current releaes is 1.0.1 and can be obtained via NuGet. See the [getting started guide](https://github.com/gregmac/NServiceMVC/wiki/GettingStarted) for installation and usage instructions.
 
 The idea behind it is to enable the creation of web services (REST to start with, then SOAP later) using the same controller syntax and setup as ASP.NET MVC 3.
+
+This is actually very similar to [ASP.NET 4 Web API](http://www.asp.net/whitepapers/mvc4-release-notes#_Toc317096197), but of course NServiceMVC works on MVC 3.
+
+> I started building this before knowing that Web API existed, and they surprised me with a release before I even widely published this. It's unclear exactly what will happen with NServiceMVC, but I am continuing to work on it at least until the final release of ASP.NET 4. I suspect at the least NServiceMVC will continue to exist to supplement Web API, and possibly will continue to exist as-is to offer an alternative.
 
 Features
 --------
@@ -12,9 +18,9 @@ Features
  * Automatically handles decoding of posted data (from JSON, XML, etc) and automatically encodes result as JSON/XML/XHTML/etc depending on Accept headers or `?format=` URL parameter
  * Provides (optional) automatic metadata (help) generation for all API paths and model types
  * Attributes are used to configure paths (currently the metadata provider requires this, but the actual API will actually work without attributes, using standard MVC3 routing)
- * Lightweight. The framework gives you just enough to build a REST service; DI containers, authentication, security, caching, logging, etc are up to you to decide and use what you need (or are already using). There are many solutions to all of these problems in the MVC world aleady, so this framework just builds on top.
+ * Lightweight. The framework gives you just enough to build a REST service; DI containers, authentication, authorization, caching, logging, etc are up to you to decide and use what you need (or are already using). There are many solutions to all of these problems in the MVC world aleady, it is not the goal of this framework to either dictate or re-implement such functionality.
 
-
+![Todomvc Metadata Page](http://i.imgur.com/qzkOw.png)
 
 Show me the code! 
 -----------------
@@ -40,7 +46,7 @@ namespace NServiceMVC.Examples.ComplexApp.Controllers
             return MyServiceLayer.Users.Create(user);
         }
 
-        [GET("users/{userId}")] // POST /users/123
+        [GET("users/{userId}")] // GET /users/123
         [Description("Load a user")]
         public Models.User Detail(int userId)
         {
@@ -76,47 +82,19 @@ NServiceMVC.Initialize(config =>
 });
 ```
 
-Motivation
-----------
+Todomvc
+-------
 
-I built this after spending a long time trying to find a way to build REST web services that seemed natural to me, and handled all the framework-type stuff (format encoding) itself. 
-
-With that in mind, I have looked at many other projects:
- 
-### WCF
-
-I have previously been involved with a commercial product that used WCF to provide combined XML, JSON and SOAP APIs using one codebase, and while it (eventually) worked, it was nothing but problems and getting it configured simply feels like fighting with the framework, not to mention every deployment required some battling with WCF to get it working in the environment. 
-
-I could go in-depth, but suffice to say that WCF does not appeal to me from very many aspects.
-
-### [ServiceStack](http://www.servicestack.net)
-
-This is a great project, and has a lot of the features I was looking for. It's also well maintained and has an active community. It definitely gave me a lot of inspiration, and I think Demis is doing a great job with it.
-
-The underlying philosophy of ServiceStack is that REST is about performing actions on resources, with I agree with. However, the implementation is that the URLs get mapped to resources (DTO's), which in turn have a service implemented as `RestService<MyModel>`, which ServiceStack then uses reflection to find.
-
-My first issue with this is just in the convoluted nature of actually working with it. It takes an extra mental step to map the URLs I want to the code that will run them. I think this may just be me personally, and that the idea behind ServiceStack is the URLs are inconsequential, but every time I try to build something with it I find I get very irritated by this.
-
-The second issue is that you either end up having a LOT of DTOs for your requests, or your DTOs are full of unused members. I'll put some code examples here eventually but basically if you have two different services that both take a userId as a parameter (for example, a service that returns the details about a user, and a service that returns a list of comments by that user), you need to have two different DTOs. The preferred way of ServiceStack seems to be to use the User DTO for the CRUD operations (which means in your GET /user/id method, you just have to ignore all the other properties in the User DTO as they don't get populated, even though they're passed). The other way requires writing two DTOs that are identical (with just a userId property) but different names. It all seems like a lot of ceremony just to get a simple service working.
-
-I also take issue with the implementation of SOAP. Yes, it's possible to service SOAP but it only works with POST requests. This means if you want to make your entire API available using SOAP, all your operations have to be POST, and you're no longer RESTful. 
-
-### [Resources over MVC](http://rom.codeplex.com/)
-
-I think this project is mostly unknown, but this actually is a great project towards what I want to achieve. I basically started building services on this, and adding more and more stuff, before I decided I should somehow incorperate it into the framework. 
-
-As I got doing this, I realized there were some ways to simplify things, and that my project would actually be a very major refactor at the very least, so for now at least, I started working on NServiceMVC. 
-
-The biggest difference is really that my services have a strongly-typed return value (istead of `ActionResult`) and that a base controller is providing a hook to do formatting instead of using global filters to intercept the model before it's passed to the view engine. The downside is that you have to inherit from NServiceMVC.ServiceController, but the upside is you get strong typing and the framework code is much simpler.
+Also check out the [NServiceMVC + Todomvc Example](https://github.com/gregmac/NServiceMVC.Examples.Todomvc).
 
 Acknowledgements
 ----------------
 
 Just to acknowledge some of the major sources of code used to get started:
 
- * [Resources over MVC](http://rom.codeplex.com/) for model binding and format rendering code 
+ * [Resources over MVC](http://rom.codeplex.com/) for model binding and format rendering code, and the initial building blocks of using MVC to build REST services 
  * [AttributeRouting](https://github.com/mccalltd/AttributeRouting) for ability to specify HTTP verbs and URLs using atributes
- * [ServiceStack](http://www.servicestack.net) for the XHTML versions of model output
+ * [ServiceStack](http://www.servicestack.net) for the XHTML versions of model output, and some inspiration in terms of service frameworks
  * [WebActivator](https://bitbucket.org/davidebbo/webactivator) used for startup code
 
 Special thanks to [JetBrains](http://www.jetbrains.com/) for providing a [TeamCity Continuous Integration server](http://www.jetbrains.com/teamcity) via [CodeBetter.com](http://codebetter.com/). The builds are available [here](http://teamcity.codebetter.com/project.html?projectId=project182).
@@ -124,9 +102,10 @@ Special thanks to [JetBrains](http://www.jetbrains.com/) for providing a [TeamCi
 Future Direction
 ----------------
 
-I have not started work on this yet, but I am thinking of building a shim so that your `GET /users/id` REST service becomes `POST /SOAP/GET/users` (with id as a parameter) if exposed as SOAP.
+The biggest challenge is the release of ASP.NET 4 Web API. It is likely at the least that this project will build on top of new features introduced there, and either supplement Web API with its metadata generation, SOAP/XML-RPC support (if implemented), or simply offer an alternative implementation.
+
+I have not started work on this yet, but I am thinking of building a shim so that your `GET /users/id` REST service becomes something like `POST /SOAP/GET_users` (with id as a parameter) if exposed as SOAP (since SOAP has totally different semantics and limitations than REST). Same thing could be done for XML-RPC.
 
 Lots more can be done with metadata. The beginnings of an auto-generated AJAX test client are there, this can be built out much more deeply. Schema generation (eg WSDL) is also an obvious place to go. 
  
 What I do not want to get into is baking-in any cross-cutting concerns (security, logging, caching, etc), and definitely not in the core library. Right now I don't see a need as effectively the service controllers act exactly like normal MVC controllers, and so any existing libraries or code compatible with MVC will work with services implemented on NServiceMVC. 
-
