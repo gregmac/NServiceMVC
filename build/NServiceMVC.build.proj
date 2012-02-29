@@ -45,7 +45,7 @@
 	
 	<Target Name="Package" DependsOnTargets="Rebuild;GetVersion">
 		<PropertyGroup>
-			<NuGetCmd>nuget.exe pack -Version "$(Version)$(NugetVersionSuffix)" -OutputDirectory ..\artifacts nuget.NServiceMVC\NServiceMVC.nuspec</NuGetCmd>
+			<NuGetCmd>..\src\.nuget\nuget.exe pack -Version "$(Version)$(NugetVersionSuffix)" -OutputDirectory ..\artifacts nuget.NServiceMVC\NServiceMVC.nuspec</NuGetCmd>
 		</PropertyGroup>
 		
 		<ItemGroup>

@@ -10,7 +10,7 @@
     <projectUrl>http://nservicemvc.com</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A lightweight framework enabling the creation of REST services within ASP.NET MVC 3</description>
-    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <releaseNotes>https://github.com/gregmac/NServiceMVC/blob/master/CHANGELOG.md</releaseNotes>
     <copyright>Copyright 2012</copyright>
     <tags>REST MVC MVC3 webservice</tags>
 	<dependencies>
