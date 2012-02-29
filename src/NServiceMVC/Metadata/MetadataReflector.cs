@@ -303,32 +303,54 @@ namespace NServiceMVC.Metadata
             var descriptionAttr = (System.ComponentModel.DescriptionAttribute)(type.GetCustomAttributes(typeof(System.ComponentModel.DescriptionAttribute), true).FirstOrDefault());
             if (descriptionAttr != null) detail.Description = descriptionAttr.Description;
 
-            object modelSample = Utilities.DefaultValueGenerator.GetSampleInstance(type);
-            if (Formatter.JSON != null)
+            try
             {
+                object modelSample = Utilities.DefaultValueGenerator.GetSampleInstance(type);
+
+                if (Formatter.JSON != null)
+                {
+                    try
+                    {
+                        detail.SampleJson = Formatter.JSON.Serialize(modelSample, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        detail.SampleJson = "Error: " + ex.Message;
+                    }
+                }
+
+                if (Formatter.XML != null)
+                {
+                    try
+                    {
+                        detail.SampleXml = Formatter.XML.Serialize(modelSample, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        detail.SampleXml = "Error: " + ex.Message;
+                    }
+                }
+
                 try
                 {
-                    detail.SampleJson = Formatter.JSON.Serialize(modelSample, true);
+                    detail.SampleCSharp = GetCSharpCode(type);
                 }
                 catch (Exception ex)
                 {
-                    detail.SampleJson = "Error: " + ex.Message;
+                    detail.SampleCSharp = "Error: " + ex.Message;
                 }
-            }
 
-            if (Formatter.XML != null)
+
+            }
+            catch (Exception ex)
             {
-                try
-                {
-                    detail.SampleXml = Formatter.XML.Serialize(modelSample, true);
-                }
-                catch (Exception ex)
-                {
-                    detail.SampleXml = "Error: " + ex.Message;
-                }
+                // todo: log error generating sample
+
+                detail.SampleJson = "Error Creating Sample: " + ex.Message;
+                detail.SampleXml = "Error Creating Sample: " + ex.Message;
+                detail.SampleCSharp = "Error Creating Sample: " + ex.ToString();
             }
 
-            detail.SampleCSharp = GetCSharpCode(type);
 
             return detail;
         }
