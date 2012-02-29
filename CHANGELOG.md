@@ -1,5 +1,16 @@
+## NServiceMVC 1.0.2.x
 
-## NServiceMVC 1.0.1.x
+*Note, this is an in-development version and not yet released*
+
+Enhancements:
+
+  * Include non-URL parameters on op screen (#9)
+  * Add parameters sample controller method to Example.HelloWorld project
+
+Bugs fixed:
+
+
+## NServiceMVC 1.0.1.22 (2012-02-21)
 
 Enhancements:
 
@@ -13,10 +24,6 @@ Enhancements:
 Bugs fixed:
 
    * XML request results in security exception (#4)
-   
-Known issues:
-
-   * See https://github.com/gregmac/NServiceMVC/issues?sort=created&direction=desc&state=open&page=1&milestone=1
 
 ## NServiceMVC 1.0.0.5 (2012-02-02)
 
