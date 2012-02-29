@@ -7,6 +7,12 @@
 		<!-- BuildNumber comes from (in order): a paramter BuildNumber, BUILD_NUMBER, and then defaults to 0 -->
 		<BuildNumber Condition="'$(BuildNumber)'==''">$(BUILD_NUMBER)</BuildNumber> 
 		<BuildNumber Condition="'$(BuildNumber)'==''">0</BuildNumber> 
+        
+        <!-- optional parameters:
+        
+        <NugetVersionSuffix>  : allows specifying eg, "-beta" to cause the nuget package to be labelled as "1.0.1.23-beta"
+        
+        -->
 
 	</PropertyGroup>
 
@@ -39,7 +45,7 @@
 	
 	<Target Name="Package" DependsOnTargets="Rebuild;GetVersion">
 		<PropertyGroup>
-			<NuGetCmd>nuget.exe pack -Version "$(Version)" -OutputDirectory ..\artifacts nuget.NServiceMVC\NServiceMVC.nuspec</NuGetCmd>
+			<NuGetCmd>nuget.exe pack -Version "$(Version)$(NugetVersionSuffix)" -OutputDirectory ..\artifacts nuget.NServiceMVC\NServiceMVC.nuspec</NuGetCmd>
 		</PropertyGroup>
 		
 		<ItemGroup>
