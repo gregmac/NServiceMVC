@@ -40,6 +40,15 @@ namespace NServiceMVC.Utilities
                     sample = TrySampleGenericTypes(T);
 
                 }
+                else if (T.IsGenericType && T.GetGenericTypeDefinition() == typeof(Nullable<>))
+                {
+                    Type[] inner = T.GetGenericArguments();
+                    var genericType = typeof(Nullable<>).MakeGenericType(inner);
+
+                    var innerValue = GetSampleInstance(T.GetGenericArguments()[0]);
+
+                    sample = Activator.CreateInstance(genericType, innerValue);
+                }
                 else
                 {
 
@@ -129,7 +138,7 @@ namespace NServiceMVC.Utilities
             }
             return null;
         }
-
+        
         private static object TrySampleGenericTypes(Type T)
         {
             object sample = null;

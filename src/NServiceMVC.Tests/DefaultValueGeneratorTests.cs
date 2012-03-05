@@ -306,5 +306,88 @@ namespace NServiceMVC.Tests
             
         }
         #endregion
+
+        #region Objects with Nullables
+        
+        public class NullableTestType
+        {
+            public Nullable<Int16> Int16Prop { get; set; }
+            public Nullable<Int32> Int32Prop { get; set; }
+            public Nullable<Int64> Int64Prop { get; set; }
+            public Nullable<UInt16> UInt16Prop { get; set; }
+            public Nullable<UInt32> UInt32Prop { get; set; }
+            public Nullable<UInt64> UInt64Prop { get; set; }
+            public Nullable<Boolean> BooleanProp { get; set; }
+            public Nullable<Single> SingleProp { get; set; }
+            public Nullable<Double> DoubleProp { get; set; }
+            public Nullable<Decimal> DecimalProp { get; set; }
+            public Nullable<Char> CharProp { get; set; }
+            public Nullable<DateTime> DateTimeProp { get; set; }
+            public Nullable<TimeSpan> TimeSpanProp { get; set; }
+            public Nullable<Byte> ByteProp { get; set; }
+            public Nullable<SByte> SByteProp { get; set; }
+        }
+
+        [Test]
+        public void NullablePropertiesInitialized()
+        {
+            var sample = Utilities.DefaultValueGenerator.GetSampleInstance(typeof(NullableTestType));
+
+            Assert.That(sample, Is.TypeOf<NullableTestType>());
+
+            NullableTestType s = (NullableTestType)sample;
+
+
+            Assert.That(s.Int16Prop, Is.EqualTo((Int16)(-1600)));
+            Assert.That(s.Int32Prop, Is.EqualTo((Int32)(-3200)));
+            Assert.That(s.Int64Prop, Is.EqualTo((Int64)(-6400)));
+            Assert.That(s.UInt16Prop, Is.EqualTo((UInt16)(1600)));
+            Assert.That(s.UInt32Prop, Is.EqualTo((UInt32)(3200)));
+            Assert.That(s.UInt64Prop, Is.EqualTo((UInt64)(6400)));
+            Assert.That(s.BooleanProp, Is.EqualTo((bool)true));
+            Assert.That(s.SingleProp, Is.EqualTo((Single)100.123));
+            Assert.That(s.DoubleProp, Is.EqualTo((Double)200.123));
+            Assert.That(s.DecimalProp, Is.EqualTo((Decimal)12345.6789));
+            Assert.That(s.CharProp, Is.EqualTo((char)'x'));
+            Assert.That(s.DateTimeProp, Is.EqualTo(new DateTime(2012, 01, 01, 00, 00, 00)));
+            Assert.That(s.TimeSpanProp, Is.EqualTo(TimeSpan.FromDays(1)));
+            Assert.That(s.ByteProp, Is.EqualTo((Byte)8));
+            Assert.That(s.SByteProp, Is.EqualTo((sbyte)(-8)));
+
+            // ---- 
+            // note: below are the tests I'd prefer, but this does not currently return nullable<T>, not sure why. 
+            // perhaps related: http://bradwilson.typepad.com/blog/2008/07/index.html
+
+            //Assert.That(s.Int16Prop, Is.TypeOf<Nullable<Int16>>());
+
+            //Assert.That(s.Int16Prop.HasValue, Is.True);
+            //Assert.That(s.Int32Prop.HasValue, Is.True);  
+            //Assert.That(s.Int64Prop.HasValue, Is.True);  
+            //Assert.That(s.UInt16Prop.HasValue, Is.True);
+            //Assert.That(s.UInt32Prop.HasValue, Is.True);
+            //Assert.That(s.UInt64Prop.HasValue, Is.True);
+            //Assert.That(s.BooleanProp.HasValue, Is.True);
+            //Assert.That(s.SingleProp.HasValue, Is.True);
+            //Assert.That(s.DoubleProp.HasValue, Is.True);
+            //Assert.That(s.DecimalProp.HasValue, Is.True);
+            //Assert.That(s.CharProp.HasValue, Is.True);
+            //Assert.That(s.DateTimeProp.HasValue, Is.True);
+            //Assert.That(s.TimeSpanProp.HasValue, Is.True);
+            //Assert.That(s.ByteProp.HasValue, Is.True);
+            //Assert.That(s.SByteProp.HasValue, Is.True);
+        }
+
+        [Test]
+        public void NullableTypesInitialized()
+        {
+            var int16sample = Utilities.DefaultValueGenerator.GetSampleInstance(typeof(Nullable<Int16>));
+
+            Assert.That(int16sample, Is.TypeOf<Nullable<Int16>>());
+            Assert.That(((Nullable<Int16>)int16sample).HasValue, Is.True);
+        }
+
+
+        #endregion
+
     }
 }
