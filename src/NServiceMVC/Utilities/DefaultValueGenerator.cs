@@ -42,27 +42,44 @@ namespace NServiceMVC.Utilities
                 }
                 else
                 {
-
-                    // create new instance of class
-                    sample = T.CreateInstance();
-
-                    foreach (var item in GetFieldsAndProperties(T))
+                    var actualType = Nullable.GetUnderlyingType(T);
+                    if (actualType != null)
                     {
-                        var type = item.ActualType;
-                        var value = item.GetValue(sample); // get currently assigned value 
-
-
-                        if (value == null || (IsBasicType(type) && CheckIsDefaultValue(type, value)))
-                        { // if null or default for that value type,
-                            value = GetSampleInstance(type);
-                        }
-
-                        if (value != null)
-                        {
-                            item.SetValue(sample, value);
-                        }
-
+                        // T is Nullable<actualType>
+                        sample = GetSampleInstance(actualType);
                     }
+                    else
+                    {
+                        // create new instance of class
+                        sample = T.CreateInstance();
+
+                        foreach (var item in GetFieldsAndProperties(T))
+                        {
+                            var type = item.ActualType;
+                            object value;
+                            try
+                            {
+                                value = item.GetValue(sample); // get currently assigned value    
+                            }
+                            catch (TargetException e)
+                            {
+                                value = null; // suppress this error -- happens with nullable<T> types
+                            }
+
+
+                            if (value == null || (IsBasicType(type) && CheckIsDefaultValue(type, value)))
+                            { // if null or default for that value type,
+                                value = GetSampleInstance(type);
+                            }
+
+                            if (value != null)
+                            {
+                                item.SetValue(sample, value);
+                            }
+
+                        }
+                    }
+                    
                 }
             }
 
@@ -282,7 +299,6 @@ namespace NServiceMVC.Utilities
                 return default(T);
             }
         }
-
 
         #region GetFieldsAndProperties helper
 

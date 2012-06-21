@@ -241,6 +241,58 @@ namespace NServiceMVC.Tests
 
         #endregion
 
+        #region Objects with Nullables
+        
+        public class NullableTestType {
+            public Nullable<Int16> Int16Prop { get; set; }
+            public Nullable<Int32> Int32Prop { get; set; }
+            public Nullable<Int64> Int64Prop { get; set; }
+            public Nullable<UInt16> UInt16Prop { get; set; }
+            public Nullable<UInt32> UInt32Prop { get; set; }
+            public Nullable<UInt64> UInt64Prop { get; set; }
+            //public Nullable<String> StringProp { get; set; }
+            public Nullable<Boolean> BooleanProp { get; set; }
+            public Nullable<Single> SingleProp { get; set; }
+            public Nullable<Double> DoubleProp { get; set; }
+            public Nullable<Decimal> DecimalProp { get; set; }
+            public Nullable<Char> CharProp { get; set; }
+            public Nullable<DateTime> DateTimeProp { get; set; }
+            public Nullable<TimeSpan> TimeSpanProp { get; set; }
+            public Nullable<Byte> ByteProp { get; set; }
+            public Nullable<SByte> SByteProp { get; set; }
+        }
+
+        [Test]
+        public void NullableTypesInitialized()
+        {
+            var sample = Utilities.DefaultValueGenerator.GetSampleInstance(typeof(NullableTestType));
+
+            Assert.That(sample, Is.TypeOf<NullableTestType>());
+
+            NullableTestType s = (NullableTestType)sample;
+
+            Assert.That(s.Int16Prop.HasValue, Is.True);
+            Assert.That(s.Int32Prop.HasValue, Is.True);  
+            Assert.That(s.Int64Prop.HasValue, Is.True);  
+            Assert.That(s.UInt16Prop.HasValue, Is.True);
+            Assert.That(s.UInt32Prop.HasValue, Is.True);
+            Assert.That(s.UInt64Prop.HasValue, Is.True);
+            //Assert.That(s.StringProp.HasValue, Is.True);
+            Assert.That(s.BooleanProp.HasValue, Is.True);
+            Assert.That(s.SingleProp.HasValue, Is.True);
+            Assert.That(s.DoubleProp.HasValue, Is.True);
+            Assert.That(s.DecimalProp.HasValue, Is.True);
+            Assert.That(s.CharProp.HasValue, Is.True);
+            Assert.That(s.DateTimeProp.HasValue, Is.True);
+            Assert.That(s.TimeSpanProp.HasValue, Is.True);
+            Assert.That(s.ByteProp.HasValue, Is.True);
+            Assert.That(s.SByteProp.HasValue, Is.True);
+        }
+
+
+        #endregion
+
+
         #region Arrays/enumerables
         [Test]
         public void BasicArrayTypesInitialized()
