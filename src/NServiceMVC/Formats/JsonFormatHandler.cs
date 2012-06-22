@@ -17,6 +17,7 @@ namespace NServiceMVC.Formats
                 DefaultValueHandling = DefaultValueHandling.Ignore,
                 NullValueHandling = NullValueHandling.Ignore,
                 ContractResolver = NServiceMVC.Configuration.JsonCamelCase ? new CamelCasePropertyNamesContractResolver() : new DefaultContractResolver(),
+                TypeNameHandling = NServiceMVC.Configuration.JsonTypeNameHandling,
             };
             NormalSettings.Converters.Add(new IsoDateTimeConverter());
             NormalSettings.Converters.Add(new StringEnumConverter());
@@ -28,6 +29,7 @@ namespace NServiceMVC.Formats
                 DefaultValueHandling = DefaultValueHandling.Include,
                 NullValueHandling = NullValueHandling.Include,
                 ContractResolver = NServiceMVC.Configuration.JsonCamelCase ? new CamelCasePropertyNamesContractResolver() : new DefaultContractResolver(),
+                TypeNameHandling = NServiceMVC.Configuration.JsonTypeNameHandling,
             };
             HumanSettings.Converters.Add(new IsoDateTimeConverter());
             HumanSettings.Converters.Add(new StringEnumConverter());

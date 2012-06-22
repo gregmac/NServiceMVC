@@ -5,6 +5,7 @@ using System.Text;
 using System.Web.Mvc;
 using System.Reflection;
 using System.Web.Routing;
+using Newtonsoft.Json;
 
 namespace NServiceMVC
 {
@@ -106,6 +107,8 @@ namespace NServiceMVC
                 AllowJson = true;
                 AllowXhtml = true;
                 AllowXml = true;
+
+                JsonTypeNameHandling = TypeNameHandling.Auto;
             }
 
             public string ApplicationTitle { get; set; }
@@ -203,6 +206,10 @@ namespace NServiceMVC
             /// </summary>
             public virtual bool JsonCamelCase { get; set; }
 
+            /// <summary>
+            /// If and how .NET types should be encoded in JSON objects 
+            /// </summary>
+            public virtual Newtonsoft.Json.TypeNameHandling JsonTypeNameHandling { get; set; }
         }
     }
 }
