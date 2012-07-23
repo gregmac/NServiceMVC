@@ -19,10 +19,11 @@ namespace NServiceMVC.WebStack
                 object model;
                 int httpStatusCode = (int)HttpStatusCode.InternalServerError;
 
-                if (filterContext.Exception is IServiceException)
+                IServiceException serviceException = filterContext.Exception as IServiceException;
+                if (serviceException!=null)
                 {
-                    model = ((IServiceException)filterContext.Exception).Model;
-                    httpStatusCode = (int)((IServiceException)filterContext.Exception).StatusCode;
+                    model = serviceException.Model;
+                    httpStatusCode = (int)serviceException.StatusCode;
                 }
                 else
                 {
