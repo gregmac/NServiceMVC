@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Mime;
 using System.Web.Mvc;
 using System.Globalization;
+using System.Web.Mvc.Async;
 using NServiceMVC.Formats;
 
 namespace NServiceMVC.WebStack
@@ -25,8 +26,26 @@ namespace NServiceMVC.WebStack
 
         //public static Func<object, ActionResult> DefaultViewFunction { get; set; }
 
+        private static readonly Type ActionResultType = typeof(ActionResult);
+
         protected override ActionResult CreateActionResult(ControllerContext controllerContext, ActionDescriptor actionDescriptor, object actionReturnValue)
         {
+            // Inspect controller method's declared return type. If it's ActionResult or a derived type we bypass the NServiceMVC serialization logic.
+            Type actionMethodReturnType = null;
+            if (actionDescriptor is ReflectedActionDescriptor)
+                actionMethodReturnType = ((ReflectedActionDescriptor)actionDescriptor).MethodInfo.ReturnType;
+            else if (actionDescriptor is ReflectedAsyncActionDescriptor)
+                actionMethodReturnType = ((ReflectedAsyncActionDescriptor)actionDescriptor).CompletedMethodInfo.ReturnType;
+
+            if (actionMethodReturnType != null)
+            {
+                // Check if controller action method declares an ActionResult type then bypass the NServiceMVC logic and pass the result.
+                if (ActionResultType.IsAssignableFrom(actionMethodReturnType))
+                {
+                    return (ActionResult)actionReturnValue;
+                }
+            }
+
             // bulk of this from ResourcesOverMvc.Web.Mvc.MultipleRepresentationsAttribute.OnActionExecuted()
 
             //// Create a list of the charsets the client is willing to support in order of preference
