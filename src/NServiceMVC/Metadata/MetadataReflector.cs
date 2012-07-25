@@ -112,7 +112,7 @@ namespace NServiceMVC.Metadata
                             from c in a.GetTypes()
                             from m in c.GetMethods()
                             where c.IsSubclassOf(typeof(ServiceController))
-                            where m.GetCustomAttributes(typeof(AttributeRouting.RouteAttribute), true).Count() > 0
+                            where m.GetCustomAttributes(typeof(AttributeRouting.Web.Mvc.RouteAttribute), true).Count() > 0
                             select m).Distinct();
 
             foreach (var method in methods)
@@ -124,8 +124,8 @@ namespace NServiceMVC.Metadata
                 if (descriptionAttr != null) description = descriptionAttr.Description;
 
 
-                var routeAttrs = from a in method.GetCustomAttributes(typeof(AttributeRouting.RouteAttribute), true)
-                                    select (AttributeRouting.RouteAttribute)a;
+                var routeAttrs = from a in method.GetCustomAttributes(typeof(AttributeRouting.Web.Mvc.RouteAttribute), true)
+                                    select (AttributeRouting.Web.Mvc.RouteAttribute)a;
 
                 foreach (var routeAttr in routeAttrs)
                 {
