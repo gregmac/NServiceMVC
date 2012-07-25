@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AttributeRouting;
+using AttributeRouting.Web.Mvc;
 using NServiceMVC;
 
 namespace NServiceMVC.Examples.HelloWorld.Controllers
