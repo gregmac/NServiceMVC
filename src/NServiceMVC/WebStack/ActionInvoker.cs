@@ -12,15 +12,15 @@ using NServiceMVC.Formats;
 
 namespace NServiceMVC.WebStack
 {
-    class ActionInvoker : ControllerActionInvoker
+    public class ActionInvoker : ControllerActionInvoker
     {
-        public ActionInvoker(ServiceController controller)
+        public ActionInvoker(dynamic controller)
             : base()
         {
             this.Controller = controller;
         }
 
-        protected ServiceController Controller { get; set; }
+        protected dynamic Controller { get; set; }
 
        // public string ViewName { get; set; }
 
