@@ -5,6 +5,7 @@ using System.Web;
 
 namespace NServiceMVC.Metadata.Models
 {
+    [DotLiquid.LiquidType("Routes", "Models")]
     public class MetadataSummary
     {
         public IEnumerable<RouteDetails> Routes { get; set; }

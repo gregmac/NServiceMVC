@@ -65,8 +65,8 @@ namespace NServiceMVC.Metadata
         public ModelDetail FindModelDetail(string typeName)
         {
             bool isArray = false;
-            System.Text.RegularExpressions.Match match;
-            if ((match = System.Text.RegularExpressions.Regex.Match(typeName, "Array\\[(?<type>.*)\\]")).Success)
+            Match match;
+            if ((match = Regex.Match(typeName, "Array\\[(?<type>.*)\\]")).Success)
             {
                 typeName = match.Groups["type"].Value;
                 isArray = true;
@@ -255,6 +255,23 @@ namespace NServiceMVC.Metadata
             models.Add(CreateModelDetail(typeof(Byte), hasMetadata: true, defaultDescription: "8-bit unsigned integer"));
             models.Add(CreateModelDetail(typeof(SByte), hasMetadata: true, defaultDescription: "8-bit signed integer"));
 
+            models.Add(CreateModelDetail(typeof(Int16?), hasMetadata: true, defaultDescription: "16-bit signed integer or null"));
+            models.Add(CreateModelDetail(typeof(Int32?), hasMetadata: true, defaultDescription: "32-bit signed integer or null"));
+            models.Add(CreateModelDetail(typeof(Int64?), hasMetadata: true, defaultDescription: "64-bit signed integer or null"));
+            models.Add(CreateModelDetail(typeof(UInt16?), hasMetadata: true, defaultDescription: "16-bit unsigned integer or null"));
+            models.Add(CreateModelDetail(typeof(UInt32?), hasMetadata: true, defaultDescription: "32-bit unsigned integer or null"));
+            models.Add(CreateModelDetail(typeof(UInt64?), hasMetadata: true, defaultDescription: "64-bit unsigned integer or null"));
+            models.Add(CreateModelDetail(typeof(Boolean?), hasMetadata: true, defaultDescription: "True/False/null value"));
+            models.Add(CreateModelDetail(typeof(Single?), hasMetadata: true, defaultDescription: "Single-precision floating-point number or null"));
+            models.Add(CreateModelDetail(typeof(Double?), hasMetadata: true, defaultDescription: "Double-precision floating-point number or null"));
+            models.Add(CreateModelDetail(typeof(Decimal?), hasMetadata: true, defaultDescription: "Decimal number or null"));
+            models.Add(CreateModelDetail(typeof(Char?), hasMetadata: true, defaultDescription: "Single character (unicode supported) or null"));
+            models.Add(CreateModelDetail(typeof(DateTime?), hasMetadata: true, defaultDescription: "Date and time or null"));
+            models.Add(CreateModelDetail(typeof(TimeSpan?), hasMetadata: true, defaultDescription: "Time interval or null"));
+            models.Add(CreateModelDetail(typeof(Byte?), hasMetadata: true, defaultDescription: "8-bit unsigned integer or null"));
+            models.Add(CreateModelDetail(typeof(SByte?), hasMetadata: true, defaultDescription: "8-bit signed integer or null"));
+
+
             return new ModelDetailCollection(models);
         }
         #endregion
@@ -300,6 +317,9 @@ namespace NServiceMVC.Metadata
 
                 detail.Name = string.Format("Array[{0}]", innerType.GetName());
             }
+
+            detail.Name = detail.Name.Replace("<", "[").Replace(">", "]");
+           
 
             var descriptionAttr = (System.ComponentModel.DescriptionAttribute)(type.GetCustomAttributes(typeof(System.ComponentModel.DescriptionAttribute), true).FirstOrDefault());
             if (descriptionAttr != null) detail.Description = descriptionAttr.Description;

@@ -62,8 +62,6 @@ namespace NServiceMVC.WebStack
         public static void Initialize()
         {
             DotLiquid.Template.NamingConvention = new DotLiquid.NamingConventions.CSharpNamingConvention();
-            DotLiquid.Template.RegisterSimpleNamespace("NServiceMVC.Metadata.Models", false);
-            
         }
 
         /// <summary>

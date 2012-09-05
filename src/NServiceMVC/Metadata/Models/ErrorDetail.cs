@@ -5,6 +5,7 @@ using System.Text;
 
 namespace NServiceMVC.Metadata.Models
 {
+    [DotLiquid.LiquidType("Message", "StackTrace", "InnerError")]
     public class ErrorDetail
     {
         public string Message { get; set; }

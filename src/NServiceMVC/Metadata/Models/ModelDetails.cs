@@ -8,6 +8,7 @@ namespace NServiceMVC.Metadata.Models
     /// <summary>
     /// Details about a model class (POCO)
     /// </summary>
+    [DotLiquid.LiquidType("Name", "Description", "ModelType", "HasMetadata", "SampleJson", "SampleXml", "SampleCSharp", "IsBasicType", "IsArray", "ArrayDetail")]
     public class ModelDetail
     {
         /// <summary>

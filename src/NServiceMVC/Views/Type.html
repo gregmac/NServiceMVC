@@ -1,6 +1,6 @@
 ﻿
 <section id="operation">
-    <h2>{% if Model.ArrayDetail %}Array of {{Model.ArrayDetail.Name}}{% else %}{{Model.Name}}{% endif %}</h2>
+    <h2>{% if Model.ArrayDetail %}Array of {{Model.ArrayDetail.Name | Escape}}{% else %}{{Model.Name | Escape}}{% endif %}</h2>
     <div class="row">
         <div class="span12">
             <h3>Description</h3>
@@ -15,7 +15,7 @@
             {% if Model.ArrayDetail %}
                 <h3>Array Content</h3>
                 <p>
-                    <a href="{{MetadataUrl}}type/{{Model.ArrayDetail.Name | escape}}">{{Model.ArrayDetail.Name}}</a>
+                    <a href="{{MetadataUrl}}type/{{Model.ArrayDetail.Name | Escape}}">{{Model.ArrayDetail.Name | Escape}}</a>
                 </p>
             {% endif %}
 

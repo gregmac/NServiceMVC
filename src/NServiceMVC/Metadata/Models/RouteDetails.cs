@@ -5,8 +5,10 @@ using System.Text;
 
 namespace NServiceMVC.Metadata.Models
 {
+    [DotLiquid.LiquidType("Url","Method","Description","Parameters","ModelType","ReturnType","NiceUrl")]
     public class RouteDetails
     {
+        [DotLiquid.LiquidType("Name", "Type", "Default", "InUrl")]
         public class ParameterDetails
         {
             public string Name { get; set; }
