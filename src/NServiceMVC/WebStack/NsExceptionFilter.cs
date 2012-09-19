@@ -33,15 +33,18 @@ namespace NServiceMVC.WebStack
 
                 // Sort the accept types acceptable to the client into order of preference then look for
                 // a response handler that supports one of the accept types.
-                foreach (var contentTypeWrapper in ActionInvoker.GetAcceptHeaderContentTypes(controller.RequestInfo.AcceptTypes))
+                if (controller.RequestInfo != null)
                 {
-                    var replacementResult = NServiceMVC.Formatter.CreateContentResult(contentTypeWrapper.ContentType.ToString(), model);
-
-                    if (replacementResult != null)
+                    foreach (var contentTypeWrapper in ActionInvoker.GetAcceptHeaderContentTypes(controller.RequestInfo.AcceptTypes))
                     {
-                        filterContext.Result = new HttpStatusContentResult(httpStatusCode, replacementResult);
-                        filterContext.ExceptionHandled = true;
-                        return;
+                        var replacementResult = NServiceMVC.Formatter.CreateContentResult(contentTypeWrapper.ContentType.ToString(), model);
+
+                        if (replacementResult != null)
+                        {
+                            filterContext.Result = new HttpStatusContentResult(httpStatusCode, replacementResult);
+                            filterContext.ExceptionHandled = true;
+                            return;
+                        }
                     }
                 }
             }
