@@ -89,6 +89,7 @@
     <Compile Include="Formats\IResponseFormatter.cs" />
     <Compile Include="Formats\JsonFormatHandler.cs" />
     <Compile Include="Formats\XmlFormatHandler.cs" />
+    <Compile Include="IServiceController.cs" />
     <Compile Include="Metadata\MetadataController.cs" />
     <Compile Include="Metadata\Models\ErrorDetail.cs" />
     <Compile Include="Metadata\Models\MetadataSummary.cs" />

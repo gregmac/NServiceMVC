@@ -12,9 +12,9 @@ namespace NServiceMVC.WebStack
 
         public void OnException(ExceptionContext filterContext)
         {
-            if (filterContext.Controller is ServiceController)
+            if (filterContext.Controller is IServiceController)
             {
-                ServiceController controller = (ServiceController)filterContext.Controller;
+                IServiceController controller = (IServiceController)filterContext.Controller;
 
                 object model;
                 int httpStatusCode = (int)HttpStatusCode.InternalServerError;

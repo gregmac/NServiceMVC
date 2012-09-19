@@ -116,14 +116,14 @@ namespace NServiceMVC
             #region Controllers
             /// <summary>
             /// The list of assemblies containing controller methods to be included in 
-            /// metadata output. Controllers must be inherited from <see cref="ServiceController"/>.
+            /// metadata output. Controllers must be inherited from <see cref="IServiceController"/>.
             /// </summary>
             /// <param name="assembly"></param>
             public virtual List<Assembly> ControllerAssemblies { get; private set; }
 
             /// <summary>
             /// Register an assembly as containing controller methods to be included in 
-            /// metadata output. Controllers must be inherited from <see cref="ServiceController"/>.
+            /// metadata output. Controllers must be inherited from <see cref="IServiceController"/>.
             /// </summary>
             /// <param name="assembly"></param>
             public virtual void RegisterControllerAssembly(Assembly assembly)

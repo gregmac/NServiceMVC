@@ -9,7 +9,7 @@ using System.Net.Mime;
 
 namespace NServiceMVC
 {
-    public class ServiceController : System.Web.Mvc.Controller
+    public class ServiceController : System.Web.Mvc.Controller, IServiceController
     {
         public ServiceController()
             : base()
@@ -17,9 +17,6 @@ namespace NServiceMVC
             ActionInvoker = new WebStack.ActionInvoker(this);
         }
 
-        /// <summary>
-        /// Information about the request. 
-        /// </summary>
         public WebStack.HttpRequestInfo RequestInfo { get; set; }
 
         protected override void  OnActionExecuting(System.Web.Mvc.ActionExecutingContext filterContext)

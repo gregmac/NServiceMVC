@@ -111,7 +111,7 @@ namespace NServiceMVC.Metadata
             var methods = (from a in Configuration.ControllerAssemblies
                             from c in a.GetTypes()
                             from m in c.GetMethods()
-                            where c.IsSubclassOf(typeof(ServiceController))
+                            where c.IsSubclassOf(typeof(IServiceController))
                             where m.GetCustomAttributes(typeof(AttributeRouting.Web.Mvc.RouteAttribute), true).Count() > 0
                             select m).Distinct();
 
