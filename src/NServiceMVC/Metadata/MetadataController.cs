@@ -79,6 +79,20 @@ namespace NServiceMVC.Metadata
         /// <returns></returns>
         public string XhtmlHelpPage(object model)
         {
+            if (model == null)
+            {
+                return Layout("XhtmlObject.html",
+                    new
+                    {
+                        ObjectJson = NServiceMVC.Formatter.JSON.Serialize(model),
+                        ModelType = "null",
+                        BaseUrl = NServiceMVC.GetBaseUrl(),
+                        MetadataUrl = NServiceMVC.GetMetadataUrl(),
+                        ContentUrl = NServiceMVC.GetContentUrl(),
+                    }
+                ).Content;
+            }
+            
             var type = model.GetType();
             var metadata = (from t in Reflector.ModelTypes
                             where t.Name == type.FullName
