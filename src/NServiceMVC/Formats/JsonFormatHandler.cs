@@ -14,7 +14,7 @@ namespace NServiceMVC.Formats
         {
             NormalSettings = new JsonSerializerSettings
             {
-                DefaultValueHandling = DefaultValueHandling.Ignore,
+                DefaultValueHandling = DefaultValueHandling.Include,
                 NullValueHandling = NullValueHandling.Ignore,
                 ContractResolver = NServiceMVC.Configuration.JsonCamelCase ? new CamelCasePropertyNamesContractResolver() : new DefaultContractResolver(),
                 TypeNameHandling = NServiceMVC.Configuration.JsonTypeNameHandling,
