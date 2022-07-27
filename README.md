@@ -1,7 +1,7 @@
 NServiceMVC
 ===========
 
-NServiceMVC is currently in active development, and is currently being built in conjunction with a piece of commercial software. 
+NServiceMVC is archived; essentially ASP.NET WebAPI was released with an extremely similar implementation but much larger ecosystem.
 
 Current releaes is 1.0.1 and can be obtained via NuGet. See the [getting started guide](https://github.com/gregmac/NServiceMVC/wiki/GettingStarted) for installation and usage instructions.
 
